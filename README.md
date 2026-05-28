@@ -1,2 +1,0 @@
-# fuzu
-like brilliant
