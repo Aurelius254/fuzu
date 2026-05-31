@@ -250,6 +250,62 @@ function MonthlyStreakCalendar() {
   );
 }
 
+function CourseCard({ title, tag, progress, description }) {
+  return (
+    <button
+      type="button"
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        gap: 10,
+        background: "#0f1720",
+        border: "1px solid #222",
+        borderRadius: 12,
+        padding: 14,
+        width: "100%",
+        textAlign: "left",
+        cursor: "pointer",
+      }}
+    >
+      <div>
+        <div style={{ fontSize: 12, color: "#7dd3fc", fontWeight: 800, marginBottom: 6 }}>{tag}</div>
+        <div style={{ fontSize: 16, fontWeight: 900, color: "#fff", marginBottom: 6 }}>{title}</div>
+        <div style={{ fontSize: 13, color: "#9ca3af" }}>{description}</div>
+      </div>
+
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 8 }}>
+        <div style={{ fontSize: 13, color: "#cbd5e1", fontWeight: 700 }}>{progress}%</div>
+        <div style={{ background: "#f59e0b", color: "#07101a", padding: "6px 10px", borderRadius: 999, fontSize: 12, fontWeight: 800 }}>Resume</div>
+      </div>
+    </button>
+  );
+}
+
+function Courses() {
+  const courseData = [
+    { title: "Scientific Thinking", tag: "Fundamentals", progress: 42, description: "Connect ideas, solve puzzles and build intuition." },
+    { title: "Algebra Essentials", tag: "Math", progress: 18, description: "Master algebraic manipulation and problem solving." },
+    { title: "Intro to AI", tag: "AI", progress: 72, description: "Foundations of machine learning and neural nets." },
+    { title: "Physics Basics", tag: "Science", progress: 5, description: "Core physics concepts explained visually." },
+  ];
+
+  return (
+    <div style={{ padding: 22 }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+        <div style={{ color: "#fff", fontSize: 20, fontWeight: 900 }}>Courses</div>
+        <div style={{ color: "#9ca3af", fontSize: 13 }}>Explore curated learning paths</div>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12 }}>
+        {courseData.map((c) => (
+          <CourseCard key={c.title} title={c.title} tag={c.tag} progress={c.progress} description={c.description} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function Dashboard() {
   const [activeNav, setActiveNav] = useState("Home");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -280,7 +336,7 @@ export default function Dashboard() {
   const menuItems = [
     { label: "Profile", icon: UserCircle2 },
     { label: "Settings", icon: Settings },
-    { label: "Help", icon: HelpCircle },
+    { label: "Help", icon: HelpCircle, route: "/help" },
     { label: "Log out", icon: LogOut },
   ];
 
@@ -316,9 +372,10 @@ export default function Dashboard() {
             </svg>
           </div>
 
-          {"Home Courses Practice".split(" ").map((item) => (
+          {"Home Courses".split(" ").map((item) => (
             <button
               key={item}
+              {...(item === "Home" ? { "data-route": "/dashboard" } : { "data-route": "/courses" })}
               onClick={() => setActiveNav(item)}
               type="button"
               style={{
@@ -398,10 +455,11 @@ export default function Dashboard() {
                   zIndex: 20,
                 }}
               >
-                {menuItems.map(({ label, icon: Icon }) => (
+                {menuItems.map(({ label, icon: Icon, route }) => (
                   <button
                     key={label}
                     type="button"
+                    {...(route ? { "data-route": route } : label === "Profile" ? { "data-route": "/accountsettings" } : {})}
                     onClick={() => setIsMenuOpen(false)}
                     style={{
                       width: "100%",

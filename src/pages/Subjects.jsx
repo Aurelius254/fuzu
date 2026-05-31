@@ -247,7 +247,7 @@ export default function Subjects() {
         ))}
 
         <div style={{ margin: "0 16px" }}>
-          <button style={{ background: "#111", color: "#fff", border: "none", borderRadius: 16, padding: "16px", fontSize: 15, fontWeight: 800, cursor: "pointer", width: "100%" }} type="button">
+          <button type="button" data-route="/courses" style={{ background: "#111", color: "#fff", border: "none", borderRadius: 16, padding: "16px", fontSize: 15, fontWeight: 800, cursor: "pointer", width: "100%" }}>
             Start learning for free →
           </button>
         </div>

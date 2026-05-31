@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import MenuButton from "../components/MenuButton";
 
 const css = `
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap');
@@ -134,17 +135,31 @@ const css = `
   .brill-input:focus { border-color: #444; }
   .brill-field { display: flex; flex-direction: column; }
   .brill-btn-update {
-    background: #2a2a2a;
+    background: linear-gradient(90deg, #2f2f2f 0%, #242424 100%);
     border: none;
     border-radius: 10px;
     padding: 13px;
     font-size: 15px;
     font-weight: 500;
     font-family: 'DM Sans', sans-serif;
-    color: #777;
-    cursor: not-allowed;
+    color: #f0f0f0;
+    cursor: pointer;
     width: 100%;
     margin-top: 4px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 8px 20px rgba(0,0,0,0.18);
+    transition: transform 0.15s, background 0.15s, box-shadow 0.15s;
+  }
+  .brill-btn-update:hover {
+    background: linear-gradient(90deg, #3b3b3b 0%, #2b2b2b 100%);
+    transform: translateY(-1px);
+  }
+  .brill-btn-update:active {
+    transform: translateY(0);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 4px 10px rgba(0,0,0,0.18);
+  }
+  .brill-btn-update:focus-visible {
+    outline: 2px solid #6f9cff;
+    outline-offset: 2px;
   }
   .brill-divider { border: none; border-top: 1px solid #1e1e1e; }
 
@@ -187,6 +202,99 @@ const css = `
     line-height: 1.6;
   }
   .brill-info-icon { color: #5b8af0; font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+  .brill-news {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .brill-seg {
+    display: inline-flex;
+    background: #161616;
+    border: 1.5px solid #2b2b2b;
+    border-radius: 999px;
+    padding: 6px;
+    gap: 6px;
+  }
+
+  .brill-seg-button {
+    font-size: 14px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: transparent;
+    color: #bdbdbd;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .brill-seg-button.active {
+    background: #efefef;
+    color: #111;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  }
+
+  .brill-subheading { font-size: 15px; color: #d0d0d0; margin-bottom: 8px; }
+
+  .brill-news-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+    letter-spacing: -0.3px;
+  }
+
+  .brill-news-card {
+    background: #171717;
+    border: 1.5px solid #383838;
+    border-radius: 14px;
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .brill-news-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #f3f3f3;
+    line-height: 1.2;
+  }
+
+  .brill-switch {
+    width: 92px;
+    height: 40px;
+    border-radius: 999px;
+    background: #4a72ff;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-shrink: 0;
+  }
+
+  .brill-switch-knob {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.18);
+  }
+
+  /* Light theme overrides when document element has data-theme="light" */
+  :root[data-theme="light"] .brilliant-root {
+    background: #f7f7f7;
+    color: #111;
+  }
+  :root[data-theme="light"] .brill-nav { background: #fff; border-bottom-color: #e6e6e6; }
+  :root[data-theme="light"] .brill-logo { color: #111; }
+  :root[data-theme="light"] .brill-nav-link { color: #444; }
+  :root[data-theme="light"] .brill-sidebar { background: #fff; border-color: #e6e6e6; }
+  :root[data-theme="light"] .brill-content { color: #111; }
+  :root[data-theme="light"] .brill-input { background: #fff; color: #111; border-color: #e6e6e6; }
+  :root[data-theme="light"] .brill-news-card, :root[data-theme="light"] .brill-email-row { background: #fff; border-color: #e6e6e6; }
 `;
 
 const HomeIcon = () => (
@@ -223,8 +331,270 @@ export default function AccountSettings() {
   const [activeTab, setActiveTab] = useState("Account");
   const [firstName, setFirstName] = useState("Aurelius");
   const [lastName, setLastName] = useState("Macharia");
+  const [announcementPrefs, setAnnouncementPrefs] = useState({
+    newsletters: true,
+    launches: true,
+    promotions: true,
+  });
+
+  const [appearanceMode, setAppearanceMode] = useState("Auto");
+  const [emailPrefs, setEmailPrefs] = useState({ reminders: true, alerts: true });
+  const [learningReminders, setLearningReminders] = useState({ dailyPractice: true, personalized: true });
+
+  useEffect(() => {
+    // initialize from localStorage
+    try {
+      const saved = localStorage.getItem("appearanceMode");
+      if (saved) setAppearanceMode(saved);
+    } catch (e) {
+      // ignore
+    }
+  }, []);
+
+  useEffect(() => {
+    // apply theme based on appearanceMode
+    const applyForMode = (mode) => {
+      if (mode === "Auto") {
+        const mq = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)");
+        const prefersDark = mq ? mq.matches : true;
+        document.documentElement.dataset.theme = prefersDark ? "dark" : "light";
+      } else {
+        document.documentElement.dataset.theme = mode.toLowerCase();
+      }
+    };
+
+    applyForMode(appearanceMode);
+    try { localStorage.setItem("appearanceMode", appearanceMode); } catch (e) {}
+
+    if (appearanceMode === "Auto") {
+      const mq = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)");
+      if (!mq) return undefined;
+      const handler = (ev) => {
+        document.documentElement.dataset.theme = ev.matches ? "dark" : "light";
+      };
+      if (mq.addEventListener) mq.addEventListener("change", handler);
+      else mq.addListener(handler);
+      return () => {
+        if (mq.removeEventListener) mq.removeEventListener("change", handler);
+        else mq.removeListener(handler);
+      };
+    }
+    return undefined;
+  }, [appearanceMode]);
 
   const sidebarItems = ["Account", "Premium", "Preferences"];
+
+  const renderActiveSection = () => {
+    if (activeTab === "Premium") {
+      return (
+        <div>
+          <div className="brill-section-title">Premium</div>
+          <div className="brill-info-box">
+            <span className="brill-info-icon"><InfoIcon /></span>
+            <div>
+              Upgrade to get access to premium learning paths, extra practice, and advanced progress tracking.
+              <br />
+              <br />
+              This area is ready for a subscription summary, plan comparison, or upgrade action.
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (activeTab === "Preferences") {
+      return (
+        <div className="brill-news" style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+          <div>
+            <div className="brill-news-title">Appearance</div>
+            <div className="brill-subheading">Choose your preferred color mode</div>
+            <div style={{ marginTop: 12 }}>
+              <div className="brill-seg">
+                {["Light", "Dark", "Auto"].map((mode) => (
+                  <button
+                    key={mode}
+                    type="button"
+                    className={`brill-seg-button${appearanceMode === mode ? " active" : ""}`}
+                    onClick={() => setAppearanceMode(mode)}
+                  >
+                    {mode}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div className="brill-news-title">Email notifications</div>
+            <div className="brill-subheading">Streaks</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 8 }}>
+              <button
+                type="button"
+                onClick={() => setEmailPrefs((p) => ({ ...p, reminders: !p.reminders }))}
+                aria-pressed={emailPrefs.reminders}
+                style={{ width: "100%", background: "#171717", border: "1.5px solid #383838", borderRadius: 14, padding: "18px 22px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, cursor: "pointer", textAlign: "left" }}
+              >
+                <div className="brill-news-label">Reminders (during the day)</div>
+                <div className="brill-switch" style={{ justifyContent: emailPrefs.reminders ? "flex-end" : "flex-start", background: emailPrefs.reminders ? "#4a72ff" : "#3a3a3a" }} aria-hidden="true">
+                  <div className="brill-switch-knob" style={{ background: emailPrefs.reminders ? "#fff" : "#cfcfcf" }} />
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setEmailPrefs((p) => ({ ...p, alerts: !p.alerts }))}
+                aria-pressed={emailPrefs.alerts}
+                style={{ width: "100%", background: "#171717", border: "1.5px solid #383838", borderRadius: 14, padding: "18px 22px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, cursor: "pointer", textAlign: "left" }}
+              >
+                <div className="brill-news-label">Alerts (warnings when your streak is about to expire)</div>
+                <div className="brill-switch" style={{ justifyContent: emailPrefs.alerts ? "flex-end" : "flex-start", background: emailPrefs.alerts ? "#4a72ff" : "#3a3a3a" }} aria-hidden="true">
+                  <div className="brill-switch-knob" style={{ background: emailPrefs.alerts ? "#fff" : "#cfcfcf" }} />
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <div className="brill-news-title">Learning Reminders</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 8 }}>
+              <button
+                type="button"
+                onClick={() => setLearningReminders((p) => ({ ...p, dailyPractice: !p.dailyPractice }))}
+                aria-pressed={learningReminders.dailyPractice}
+                style={{ width: "100%", background: "#171717", border: "1.5px solid #383838", borderRadius: 14, padding: "18px 22px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, cursor: "pointer", textAlign: "left" }}
+              >
+                <div className="brill-news-label">Daily practice</div>
+                <div className="brill-switch" style={{ justifyContent: learningReminders.dailyPractice ? "flex-end" : "flex-start", background: learningReminders.dailyPractice ? "#4a72ff" : "#3a3a3a" }} aria-hidden="true">
+                  <div className="brill-switch-knob" style={{ background: learningReminders.dailyPractice ? "#fff" : "#cfcfcf" }} />
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setLearningReminders((p) => ({ ...p, personalized: !p.personalized }))}
+                aria-pressed={learningReminders.personalized}
+                style={{ width: "100%", background: "#171717", border: "1.5px solid #383838", borderRadius: 14, padding: "18px 22px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, cursor: "pointer", textAlign: "left" }}
+              >
+                <div className="brill-news-label">Personalized course recommendations</div>
+                <div className="brill-switch" style={{ justifyContent: learningReminders.personalized ? "flex-end" : "flex-start", background: learningReminders.personalized ? "#4a72ff" : "#3a3a3a" }} aria-hidden="true">
+                  <div className="brill-switch-knob" style={{ background: learningReminders.personalized ? "#fff" : "#cfcfcf" }} />
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <div className="brill-news-title">News and Announcements</div>
+          </div>
+
+          {[
+            { key: "newsletters", label: "Monthly newsletters" },
+            { key: "launches", label: "Content launches" },
+            { key: "promotions", label: "Promotions" },
+          ].map((item) => (
+            <button
+              key={item.key}
+              type="button"
+              onClick={() =>
+                setAnnouncementPrefs((previous) => ({
+                  ...previous,
+                  [item.key]: !previous[item.key],
+                }))
+              }
+              aria-pressed={announcementPrefs[item.key]}
+              style={{
+                width: "100%",
+                background: "#171717",
+                border: "1.5px solid #383838",
+                borderRadius: 14,
+                padding: "18px 22px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 12,
+                cursor: "pointer",
+                textAlign: "left",
+              }}
+            >
+              <div className="brill-news-label">{item.label}</div>
+              <div
+                className="brill-switch"
+                style={{
+                  justifyContent: announcementPrefs[item.key] ? "flex-end" : "flex-start",
+                  background: announcementPrefs[item.key] ? "#4a72ff" : "#3a3a3a",
+                }}
+                aria-hidden="true"
+              >
+                <div className="brill-switch-knob" style={{ background: announcementPrefs[item.key] ? "#fff" : "#cfcfcf" }} />
+              </div>
+            </button>
+          ))}
+        </div>
+      );
+    }
+
+    return (
+      <>
+        <div>
+          <div className="brill-section-title">Personal info</div>
+          <div className="brill-section">
+            <div className="brill-field">
+              <label className="brill-label">First name</label>
+              <input
+                className="brill-input"
+                type="text"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+            </div>
+            <div className="brill-field">
+              <label className="brill-label">Last name</label>
+              <input
+                className="brill-input"
+                type="text"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+              />
+            </div>
+            <button className="brill-btn-update" type="button">
+              Update personal info
+            </button>
+          </div>
+        </div>
+
+        <hr className="brill-divider" />
+
+        <div>
+          <div className="brill-section-title">Email address</div>
+          <div className="brill-section">
+            <div className="brill-email-row">
+              <span className="brill-email-text">machariaaurelius@gmail.com</span>
+              <div className="brill-badges">
+                <span className="brill-badge brill-badge-verified">VERIFIED</span>
+                <span className="brill-badge brill-badge-primary">PRIMARY</span>
+              </div>
+            </div>
+            <button className="brill-btn-add-email" type="button">Add another email</button>
+          </div>
+        </div>
+
+        <hr className="brill-divider" />
+
+        <div>
+          <div className="brill-section-title">Password</div>
+          <div className="brill-info-box">
+            <span className="brill-info-icon"><InfoIcon /></span>
+            <div>
+              Your account doesn't have a password set. You sign in using social authentication.
+              <br />
+              <br />
+              If you'd like to set a password, you can do so from your social connections page.
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  };
 
   return (
     <>
@@ -235,13 +605,13 @@ export default function AccountSettings() {
             <span className="brill-logo">Brilliant</span>
             <div className="brill-nav-links">
               <button className="brill-nav-link" type="button" data-route="/"> <HomeIcon /> Home </button>
-              <button className="brill-nav-link" type="button" data-route="/accountsettings"> <CoursesIcon /> Courses </button>
+              <button className="brill-nav-link" type="button" data-route="/courses"> <CoursesIcon /> Courses </button>
             </div>
           </div>
           <div className="brill-nav-right">
             <button className="brill-btn-premium" type="button">Go Premium</button>
             <div className="brill-pill">0 ⚡</div>
-            <button className="brill-hamburger" type="button"><HamburgerIcon /></button>
+            <div className="brill-hamburger"><MenuButton /></div>
           </div>
         </nav>
 
@@ -259,63 +629,7 @@ export default function AccountSettings() {
           </div>
 
           <div className="brill-content">
-            <div>
-              <div className="brill-section-title">Personal info</div>
-              <div className="brill-section">
-                <div className="brill-field">
-                  <label className="brill-label">First name</label>
-                  <input
-                    className="brill-input"
-                    type="text"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                  />
-                </div>
-                <div className="brill-field">
-                  <label className="brill-label">Last name</label>
-                  <input
-                    className="brill-input"
-                    type="text"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                  />
-                </div>
-                <button className="brill-btn-update" type="button" disabled>
-                  Update personal info
-                </button>
-              </div>
-            </div>
-
-            <hr className="brill-divider" />
-
-            <div>
-              <div className="brill-section-title">Email address</div>
-              <div className="brill-section">
-                <div className="brill-email-row">
-                  <span className="brill-email-text">machariaaurelius@gmail.com</span>
-                  <div className="brill-badges">
-                    <span className="brill-badge brill-badge-verified">VERIFIED</span>
-                    <span className="brill-badge brill-badge-primary">PRIMARY</span>
-                  </div>
-                </div>
-                <button className="brill-btn-add-email" type="button">Add another email</button>
-              </div>
-            </div>
-
-            <hr className="brill-divider" />
-
-            <div>
-              <div className="brill-section-title">Password</div>
-              <div className="brill-info-box">
-                <span className="brill-info-icon"><InfoIcon /></span>
-                <div>
-                  Your account doesn't have a password set. You sign in using social authentication.
-                  <br />
-                  <br />
-                  If you'd like to set a password, you can do so from your social connections page.
-                </div>
-              </div>
-            </div>
+            {renderActiveSection()}
           </div>
         </div>
       </div>

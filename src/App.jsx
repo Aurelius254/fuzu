@@ -1,12 +1,22 @@
 import { useEffect, useMemo, useState } from "react";
 import AccountSettings from "./pages/AccountSettings";
 import Dashboard from "./pages/Dashboard";
+import Courses from "./pages/Courses";
 import Subjects from "./pages/Subjects";
-import Paths from "./pages/Paths";
+import PathDetail from "./pages/PathDetail";
+import Help from "./pages/Help";
 
 function navigateTo(pathname) {
   window.history.pushState({}, "", pathname);
   window.dispatchEvent(new PopStateEvent("popstate"));
+}
+
+function Redirect({ to }) {
+  useEffect(() => {
+    navigateTo(to);
+  }, [to]);
+
+  return null;
 }
 
 function resolveRoute(pathname) {
@@ -19,7 +29,27 @@ function resolveRoute(pathname) {
   }
 
   if (pathname === "/paths") {
-    return <Paths />;
+    return <Redirect to="/courses" />;
+  }
+
+  if (pathname.startsWith("/paths/")) {
+    const parts = pathname.split("/").filter(Boolean);
+    const cardId = parts[1];
+    return <Redirect to={`/courses/${cardId}`} />;
+  }
+
+  if (pathname === "/courses") {
+    return <Courses />;
+  }
+
+  if (pathname.startsWith("/courses/")) {
+    const parts = pathname.split("/").filter(Boolean);
+    const cardId = parts[1];
+    return <PathDetail params={{ cardId }} />;
+  }
+
+  if (pathname === "/help") {
+    return <Help />;
   }
 
   if (pathname === "/dashboard") {
