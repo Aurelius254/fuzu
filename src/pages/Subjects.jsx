@@ -1,4 +1,5 @@
 import { useState } from "react";
+import TopNav from "../components/TopNav";
 
 function MathVisual() {
   const [colored, setColored] = useState([true, true, false, false]);
@@ -139,63 +140,7 @@ const subjects = [
 export default function Subjects() {
   return (
     <div style={{ minHeight: "100vh", background: "#F7F8FC", fontFamily: "'DM Sans', 'Segoe UI', sans-serif" }}>
-      <div style={{ padding: "10px 10px 0" }}>
-        <div
-          style={{
-            maxWidth: 768,
-            margin: "0 auto",
-            background: "#fff",
-            border: "1px solid #e9e9e9",
-            borderRadius: 18,
-            boxShadow: "0 1px 0 rgba(0,0,0,0.03), 0 8px 28px rgba(0,0,0,0.04)",
-            padding: "10px 14px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: 14,
-          }}
-        >
-          <div style={{ fontSize: 24, fontWeight: 900, letterSpacing: "-0.8px", color: "#111", lineHeight: 1 }}>
-            Brilliant
-          </div>
-
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <button
-              type="button"
-              style={{
-                background: "#fff",
-                color: "#111",
-                border: "1px solid #e2e2e2",
-                borderRadius: 999,
-                padding: "8px 16px",
-                fontSize: 13,
-                fontWeight: 700,
-                cursor: "pointer",
-                boxShadow: "0 1px 0 rgba(0,0,0,0.02)",
-              }}
-            >
-              Sign in
-            </button>
-
-            <button
-              type="button"
-              style={{
-                background: "#111",
-                color: "#fff",
-                border: "1px solid #111",
-                borderRadius: 999,
-                padding: "8px 16px",
-                fontSize: 13,
-                fontWeight: 800,
-                cursor: "pointer",
-                boxShadow: "0 1px 0 rgba(0,0,0,0.08)",
-              }}
-            >
-              Get started
-            </button>
-          </div>
-        </div>
-      </div>
+      <TopNav />
 
       <div style={{ maxWidth: 480, margin: "0 auto", padding: "26px 0 60px" }}>
         <div style={{ textAlign: "center", padding: "0 24px 28px" }}>

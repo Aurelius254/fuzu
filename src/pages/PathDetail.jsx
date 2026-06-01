@@ -1,4 +1,5 @@
 import learningRows from "../data/learningRows.jsx";
+import TopNav from "../components/TopNav";
 
 function findCardById(cardId) {
   for (const row of learningRows) {
@@ -25,6 +26,8 @@ export default function PathDetail({ params } = {}) {
 
   return (
     <div style={{ minHeight: "100vh", background: "#0b0b0b", color: "#fff", fontFamily: "Arial, Helvetica, sans-serif" }}>
+      <TopNav />
+
       <div style={{ maxWidth: 880, margin: "40px auto", padding: 20 }}>
         <div style={{ display: "flex", gap: 18, alignItems: "center" }}>
           <div style={{ width: 64, height: 64 }}>{row.icon}</div>

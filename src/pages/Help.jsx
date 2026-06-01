@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import MenuButton from "../components/MenuButton";
+import TopNav from "../components/TopNav";
 
 const css = `
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap');
@@ -262,20 +263,7 @@ export default function Help() {
     <>
       <style>{css}</style>
       <div className="brilliant-root">
-        <nav className="brill-nav">
-          <div className="brill-nav-left">
-            <span className="brill-logo">Brilliant</span>
-            <div className="brill-nav-links">
-              <button className="brill-nav-link" type="button" data-route="/dashboard"> <HomeIcon /> Home </button>
-              <button className="brill-nav-link" type="button" data-route="/courses"> <CoursesIcon /> Courses </button>
-            </div>
-          </div>
-          <div className="brill-nav-right">
-            <button className="brill-btn-premium" type="button">Go Premium</button>
-            <div className="brill-pill">0 ⚡</div>
-            <div className="brill-hamburger"><MenuButton /></div>
-          </div>
-        </nav>
+        <TopNav />
 
         <div className="brill-page">
           <div className="brill-sidebar">
@@ -294,7 +282,7 @@ export default function Help() {
             <div>
               <div className="brill-section-title">Help center</div>
               <div className="brill-section-subtitle">
-                Find answers fast with a layout inspired by Brilliant&apos;s clean support pages.
+                Find answers fast with a layout inspired by Fuzu&apos;s clean support pages.
               </div>
             </div>
 

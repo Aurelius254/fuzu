@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Menu, UserCircle2, Settings, HelpCircle, LogOut } from "lucide-react";
+import TopNav from "../components/TopNav";
 
 const GearLightbulbIcon = () => (
   <svg viewBox="0 0 120 120" width="130" height="130" xmlns="http://www.w3.org/2000/svg">
@@ -124,7 +125,7 @@ function PinMarker() {
   );
 }
 
-function MonthlyStreakCalendar() {
+function MonthlyStreakCalendar({ forcedHeight, outerRef }) {
   const [viewYear, setViewYear] = useState(2026);
   const [viewMonth, setViewMonth] = useState(4);
 
@@ -158,24 +159,30 @@ function MonthlyStreakCalendar() {
   };
 
   const DOW = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
-  const CELL = 38;
-  const GAP = 2;
+  const CELL = 36; // wider cells for more breathing room
+  const GAP = 6;
+  const totalVerticalSpace = forcedHeight ? Math.max(0, forcedHeight - 42 - 28 - 32) : null;
+  const rowHeight = totalVerticalSpace ? Math.max(18, Math.floor((totalVerticalSpace - 10) / weeks.length)) : CELL + 10;
+  const rowInnerSize = Math.max(16, Math.min(CELL - 6, rowHeight - 4));
+  const compactGap = totalVerticalSpace ? Math.max(2, Math.floor((rowHeight - rowInnerSize) / 2)) : 6;
+  const headerPadding = totalVerticalSpace ? "3px 0" : "6px 0";
+  const headerMarginBottom = totalVerticalSpace ? 4 : 8;
 
   return (
-    <div style={{ background: "#232323", borderRadius: 18, padding: "20px 14px 16px", width: 320, flexShrink: 0 }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
-        <button onClick={prevMonth} style={{ background: "none", border: "none", color: "#ccc", fontSize: 22, cursor: "pointer", padding: "0 8px" }}>‹</button>
-        <span style={{ color: "#fff", fontWeight: 800, fontSize: 20 }}>{MONTH_NAMES[viewMonth]} {viewYear}</span>
-        <button onClick={nextMonth} style={{ background: "none", border: "none", color: "#ccc", fontSize: 22, cursor: "pointer", padding: "0 8px" }}>›</button>
+    <div data-calendar="monthly" ref={outerRef} style={{ background: "#232323", borderRadius: 18, padding: "14px 10px", width: 320, flexShrink: 0, height: forcedHeight ? forcedHeight : 'auto', overflow: 'hidden' }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+        <button onClick={prevMonth} style={{ background: "none", border: "none", color: "#ccc", fontSize: 18, cursor: "pointer", padding: "0 8px" }}>‹</button>
+        <span style={{ color: "#fff", fontWeight: 800, fontSize: 16 }}>{MONTH_NAMES[viewMonth]} {viewYear}</span>
+        <button onClick={nextMonth} style={{ background: "none", border: "none", color: "#ccc", fontSize: 18, cursor: "pointer", padding: "0 8px" }}>›</button>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: `repeat(7, ${CELL}px)`, gap: GAP, marginBottom: 8 }}>
+      <div style={{ display: "grid", gridTemplateColumns: `repeat(7, ${CELL}px)`, gap: GAP, marginBottom: headerMarginBottom }}>
         {DOW.map((d) => (
-          <div key={d} style={{ textAlign: "center", color: "#666", fontWeight: 700, fontSize: 13, padding: "4px 0" }}>{d}</div>
+          <div key={d} style={{ textAlign: "center", color: "#666", fontWeight: 800, fontSize: 13, padding: headerPadding, lineHeight: 1 }}>{d}</div>
         ))}
       </div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: compactGap }}>
         {weeks.map((week, wi) => {
           const streakIndices = week.map((day, index) => (day && STREAK_DAYS.has(day) ? index : -1)).filter((index) => index >= 0);
           const hasStreak = streakIndices.length > 0;
@@ -183,17 +190,17 @@ function MonthlyStreakCalendar() {
           const streakEnd = hasStreak ? Math.max(...streakIndices) : -1;
 
           return (
-            <div key={wi} style={{ position: "relative", height: CELL + 8 }}>
+            <div key={wi} style={{ position: "relative", height: rowHeight }}>
               {hasStreak && (
                 <div style={{
                   position: "absolute",
-                  top: 4,
+                  top: Math.max(2, Math.floor((rowHeight - 18) / 2)),
                   left: streakStart * (CELL + GAP),
                   width: (streakEnd - streakStart + 1) * (CELL + GAP) - GAP,
-                  height: CELL,
+                  height: Math.max(10, rowInnerSize),
                   borderRadius: 999,
                   background: "linear-gradient(90deg, #f5c518 0%, #c84bff 100%)",
-                  border: "2.5px solid #f5c518",
+                  border: "2px solid #f5c518",
                   zIndex: 0,
                 }} />
               )}
@@ -206,11 +213,11 @@ function MonthlyStreakCalendar() {
                   const isEmpty = !day;
 
                   return (
-                    <div key={di} style={{ position: "relative", height: CELL, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <div key={di} style={{ position: "relative", height: rowHeight, display: "flex", alignItems: "center", justifyContent: "center" }}>
                       {isPin && <PinMarker />}
                       <div style={{
-                        width: CELL - 4,
-                        height: CELL - 4,
+                        width: CELL - 6,
+                        height: rowInnerSize,
                         borderRadius: "50%",
                         display: "flex",
                         alignItems: "center",
@@ -221,15 +228,16 @@ function MonthlyStreakCalendar() {
                       }}>
                         <span style={{
                           fontWeight: 800,
-                          fontSize: 16,
+                          fontSize: totalVerticalSpace ? 13 : 14,
                           color: isEmpty ? "transparent" : isToday ? "#fff" : isStreak ? "#1a0020" : day > TODAY ? "#555" : "#888",
+                          lineHeight: 1,
                         }}>
                           {day || ""}
                         </span>
                         {day && [4, 7, 18, 21, 24].includes(day) && (
                           <div style={{
                             position: "absolute",
-                            bottom: 3,
+                            bottom: 2,
                             right: 6,
                             width: 5,
                             height: 5,
@@ -249,6 +257,7 @@ function MonthlyStreakCalendar() {
     </div>
   );
 }
+
 
 function CourseCard({ title, tag, progress, description }) {
   return (
@@ -310,6 +319,10 @@ export default function Dashboard() {
   const [activeNav, setActiveNav] = useState("Home");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
+  const leftCardRef = useRef(null);
+  const level1Ref = useRef(null);
+  const calendarOuterRef = useRef(null);
+  const [calendarHeightPx, setCalendarHeightPx] = useState(null);
 
   useEffect(() => {
     const handlePointerDown = (event) => {
@@ -333,20 +346,40 @@ export default function Dashboard() {
     };
   }, []);
 
+  useEffect(() => {
+    function measure() {
+      if (!level1Ref.current || !calendarOuterRef.current) return;
+      const lvl = level1Ref.current.getBoundingClientRect();
+      const calTop = calendarOuterRef.current.getBoundingClientRect().top;
+      const desired = Math.max(100, Math.round(lvl.top - calTop));
+      setCalendarHeightPx(desired);
+    }
+
+    // measure after paint
+    requestAnimationFrame(measure);
+    window.addEventListener("resize", measure);
+    const mo = new MutationObserver(measure);
+    mo.observe(document.body, { childList: true, subtree: true });
+    return () => {
+      window.removeEventListener("resize", measure);
+      mo.disconnect();
+    };
+  }, []);
+
   const menuItems = [
-    { label: "Profile", icon: UserCircle2 },
-    { label: "Settings", icon: Settings },
+    { label: "Settings", icon: UserCircle2, route: "/accountsettings" },
     { label: "Help", icon: HelpCircle, route: "/help" },
     { label: "Log out", icon: LogOut },
   ];
 
   return (
     <div style={{
-      minHeight: "100vh",
+      minHeight: "50vh",
       background: "#111",
       display: "flex",
       alignItems: "center",
-      justifyContent: "center",
+      justifyContent: "flex-start",
+      paddingTop: 24,
       fontFamily: "'Segoe UI', system-ui, sans-serif",
     }}>
       <div style={{
@@ -356,138 +389,10 @@ export default function Dashboard() {
         overflow: "hidden",
         boxShadow: "0 8px 60px rgba(0,0,0,0.7)",
       }}>
-        <nav style={{
-          display: "flex",
-          alignItems: "center",
-          padding: "14px 28px",
-          background: "#1e1e1e",
-          gap: 0,
-        }}>
-          <div style={{ marginRight: 28 }}>
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-              <circle cx="16" cy="16" r="15" stroke="#aaa" strokeWidth="1.5" fill="none" />
-              <circle cx="16" cy="16" r="10" stroke="#aaa" strokeWidth="1.2" fill="none" />
-              <line x1="1" y1="16" x2="31" y2="16" stroke="#aaa" strokeWidth="1.2" />
-              <ellipse cx="16" cy="16" rx="6" ry="15" stroke="#aaa" strokeWidth="1.2" fill="none" />
-            </svg>
-          </div>
+        <TopNav />
 
-          {"Home Courses".split(" ").map((item) => (
-            <button
-              key={item}
-              {...(item === "Home" ? { "data-route": "/dashboard" } : { "data-route": "/courses" })}
-              onClick={() => setActiveNav(item)}
-              type="button"
-              style={{
-                background: "none",
-                border: "none",
-                color: activeNav === item ? "#fff" : "#888",
-                fontWeight: activeNav === item ? 700 : 400,
-                fontSize: 15,
-                cursor: "pointer",
-                padding: "6px 18px",
-                borderBottom: activeNav === item ? "2px solid #fff" : "2px solid transparent",
-                marginBottom: -2,
-              }}
-            >
-              {item}
-            </button>
-          ))}
-
-          <div style={{ flex: 1, display: "flex", justifyContent: "flex-end", marginRight: 16 }}>
-            <button
-              type="button"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 8,
-                background: "linear-gradient(90deg, #f6d86a 0%, #c84bff 100%)",
-                color: "#111",
-                border: "1px solid #4d3b7a",
-                borderRadius: 999,
-                padding: "9px 18px",
-                minWidth: 150,
-                fontSize: 14,
-                fontWeight: 800,
-                cursor: "pointer",
-                boxShadow: "0 2px 0 rgba(0,0,0,0.08)",
-              }}
-            >
-              Go Premium
-            </button>
-          </div>
-
-          <div ref={menuRef} style={{ position: "relative" }}>
-            <button
-              type="button"
-              onClick={() => setIsMenuOpen((open) => !open)}
-              style={{
-                width: 38,
-                height: 38,
-                borderRadius: "50%",
-                background: isMenuOpen ? "#3b3b3b" : "#333",
-                border: "1px solid #454545",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: "pointer",
-                color: "#d8d8d8",
-              }}
-              aria-label="Open menu"
-              aria-expanded={isMenuOpen}
-            >
-              <Menu size={20} />
-            </button>
-
-            {isMenuOpen && (
-              <div
-                style={{
-                  position: "absolute",
-                  top: "calc(100% + 10px)",
-                  right: 0,
-                  minWidth: 184,
-                  background: "#202020",
-                  border: "1px solid #333",
-                  borderRadius: 14,
-                  padding: 8,
-                  boxShadow: "0 20px 40px rgba(0,0,0,0.35)",
-                  zIndex: 20,
-                }}
-              >
-                {menuItems.map(({ label, icon: Icon, route }) => (
-                  <button
-                    key={label}
-                    type="button"
-                    {...(route ? { "data-route": route } : label === "Profile" ? { "data-route": "/accountsettings" } : {})}
-                    onClick={() => setIsMenuOpen(false)}
-                    style={{
-                      width: "100%",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 10,
-                      background: "none",
-                      border: "none",
-                      color: "#f0f0f0",
-                      fontSize: 14,
-                      fontWeight: 600,
-                      padding: "10px 12px",
-                      borderRadius: 10,
-                      cursor: "pointer",
-                      textAlign: "left",
-                    }}
-                  >
-                    <Icon size={16} />
-                    {label}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        </nav>
-
-        <div style={{ display: "flex", gap: 18, padding: "22px 22px 28px" }}>
-          <div style={{
+        <div style={{ display: "flex", gap: 18, padding: "22px 22px 28px", alignItems: 'flex-start' }}>
+          <div ref={leftCardRef} style={{
             flex: 1,
             background: "linear-gradient(160deg, #1e1e2e 60%, #2a1a3e 100%)",
             borderRadius: 16,
@@ -516,7 +421,7 @@ export default function Dashboard() {
               <div style={{ color: "#fff", fontWeight: 800, fontSize: 24, marginBottom: 6 }}>
                 Scientific Thinking
               </div>
-              <div style={{ color: "#aaa", fontSize: 14, marginBottom: 10 }}>Level 1</div>
+                <div ref={level1Ref} style={{ color: "#aaa", fontSize: 14, marginBottom: 10 }}>Level 1</div>
               <div style={{ color: "#bbb", fontSize: 14, lineHeight: 1.5, maxWidth: 280 }}>
                 Connect ideas, solve puzzles, and build your knowledge.
               </div>
@@ -558,7 +463,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <MonthlyStreakCalendar />
+          <MonthlyStreakCalendar forcedHeight={calendarHeightPx} outerRef={calendarOuterRef} />
         </div>
       </div>
     </div>

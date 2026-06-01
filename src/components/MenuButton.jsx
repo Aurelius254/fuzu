@@ -21,8 +21,7 @@ export default function MenuButton({ items } = {}) {
   }, []);
 
   const menuItems = items ?? [
-    { label: "Profile", route: "/accountsettings" },
-    { label: "Settings" },
+    { label: "Settings", route: "/accountsettings" },
     { label: "Help", route: "/help" },
     { label: "Log out" },
   ];
