@@ -378,7 +378,7 @@ export default function Dashboard() {
       background: "#111",
       display: "flex",
       alignItems: "center",
-      justifyContent: "flex-start",
+      justifyContent: "center",
       paddingTop: 24,
       fontFamily: "'Segoe UI', system-ui, sans-serif",
     }}>
