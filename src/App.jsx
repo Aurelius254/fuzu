@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
+  onAuthStateChanged,
 } from "firebase/auth";
 import { auth, googleProvider } from "./firebase";
+import AppRouter from "./AppRouter";
 
 function AuthModal({ onClose, onAuthSuccess }) {
   const [view, setView] = useState("main");
@@ -72,14 +74,8 @@ function AuthModal({ onClose, onAuthSuccess }) {
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-
       <div className="relative bg-[#111827] border border-white/10 rounded-3xl p-8 w-full max-w-md mx-4 shadow-2xl z-10">
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-5 text-gray-500 hover:text-white text-xl transition"
-        >
-          ✕
-        </button>
+        <button onClick={onClose} className="absolute top-4 right-5 text-gray-500 hover:text-white text-xl transition">✕</button>
 
         <div className="flex justify-center mb-6">
           <div className="w-14 h-14 bg-gradient-to-br from-[#7dd3fc] to-[#2563eb] rounded-2xl flex items-center justify-center text-2xl font-bold text-white shadow-lg">
@@ -160,9 +156,7 @@ function AuthModal({ onClose, onAuthSuccess }) {
                   Sign up
                 </button>
               </p>
-              <button className="text-sm text-gray-500 hover:text-white transition">
-                Reset password
-              </button>
+              <button className="text-sm text-gray-500 hover:text-white transition">Reset password</button>
             </div>
 
             <button onClick={() => { clearForm(); setView("main"); }} className="mt-6 w-full text-center text-xs text-gray-600 hover:text-gray-400 transition">
@@ -224,24 +218,9 @@ function AuthModal({ onClose, onAuthSuccess }) {
   );
 }
 
-export default function FuzuLandingPage() {
-  const [showAuth, setShowAuth] = useState(false);
-  const [user, setUser] = useState(null);
-
-  const handleAuthSuccess = () => {
-    setUser(auth.currentUser);
-    setShowAuth(false);
-  };
-
-  const handleSignOut = async () => {
-    await signOut(auth);
-    setUser(null);
-  };
-
+function LandingPage({ onShowAuth }) {
   return (
     <div className="min-h-screen bg-[#0f1720] text-white font-sans overflow-x-hidden">
-
-      {showAuth && <AuthModal onClose={() => setShowAuth(false)} onAuthSuccess={handleAuthSuccess} />}
 
       {/* Navbar */}
       <nav className="fixed top-0 left-0 w-full z-50 bg-[#0f1720]/90 backdrop-blur-md border-b border-white/10">
@@ -250,24 +229,12 @@ export default function FuzuLandingPage() {
           <div className="hidden md:flex items-center gap-6 text-sm text-gray-300">
             <a href="#" className="hover:text-white transition">Courses</a>
             <a href="#" className="hover:text-white transition">Pricing</a>
-            {user ? (
-              <div className="flex items-center gap-4">
-                <span className="text-gray-400 text-sm">{user.email || user.displayName}</span>
-                <button
-                  onClick={handleSignOut}
-                  className="bg-white/10 hover:bg-white/20 text-white px-5 py-2 rounded-full text-sm font-semibold transition"
-                >
-                  Sign out
-                </button>
-              </div>
-            ) : (
-              <button
-                onClick={() => setShowAuth(true)}
-                className="bg-white text-black px-5 py-2 rounded-full text-sm font-semibold hover:scale-105 transition-transform"
-              >
-                Sign in
-              </button>
-            )}
+            <button
+              onClick={onShowAuth}
+              className="bg-white text-black px-5 py-2 rounded-full text-sm font-semibold hover:scale-105 transition-transform"
+            >
+              Sign in
+            </button>
           </div>
         </div>
       </nav>
@@ -291,7 +258,7 @@ export default function FuzuLandingPage() {
               engaging interactive lessons and visual problem solving.
             </p>
             <button
-              onClick={() => setShowAuth(true)}
+              onClick={onShowAuth}
               className="bg-[#f59e0b] hover:bg-[#fbbf24] text-black px-8 py-4 rounded-full text-lg font-semibold transition-all hover:scale-105 shadow-xl"
             >
               Get Started
@@ -437,7 +404,7 @@ export default function FuzuLandingPage() {
             Interactive lessons designed to help you truly understand concepts, not just memorize them.
           </p>
           <button
-            onClick={() => setShowAuth(true)}
+            onClick={onShowAuth}
             className="bg-[#f59e0b] hover:bg-[#fbbf24] text-black px-8 py-4 rounded-full text-lg font-semibold transition-all hover:scale-105"
           >
             Get Started
@@ -492,5 +459,38 @@ export default function FuzuLandingPage() {
         </div>
       </footer>
     </div>
+  );
+}
+
+export default function App() {
+  const [user, setUser] = useState(null);
+  const [authChecked, setAuthChecked] = useState(false);
+  const [showAuth, setShowAuth] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setAuthChecked(true);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // Wait for Firebase to check auth state before rendering anything
+  if (!authChecked) return null;
+
+  // Signed in — show her dashboard
+  if (user) return <AppRouter />;
+
+  // Not signed in — show landing page
+  return (
+    <>
+      {showAuth && (
+        <AuthModal
+          onClose={() => setShowAuth(false)}
+          onAuthSuccess={() => setShowAuth(false)}
+        />
+      )}
+      <LandingPage onShowAuth={() => setShowAuth(true)} />
+    </>
   );
 }
