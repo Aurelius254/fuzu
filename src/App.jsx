@@ -227,7 +227,7 @@ function LandingPage({ onShowAuth }) {
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="text-2xl font-bold tracking-tight text-white">Fuzu</div>
           <div className="hidden md:flex items-center gap-6 text-sm text-gray-300">
-            <a href="#" className="hover:text-white transition">Courses</a>
+            <a href="#" className="hover:text-white transition">About</a>
             <a href="#" className="hover:text-white transition">Pricing</a>
             <button
               onClick={onShowAuth}
@@ -247,9 +247,9 @@ function LandingPage({ onShowAuth }) {
               Interactive learning platform
             </p>
             <h1 className="text-5xl md:text-7xl font-bold leading-tight mb-8">
-              Learn deeply.
+              Learn clearly.
               <br />
-              Think clearly.
+              Think broadly.
               <br />
               Build confidently.
             </h1>

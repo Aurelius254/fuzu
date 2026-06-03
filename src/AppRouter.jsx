@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
+import { signOut } from "firebase/auth";
+import { auth } from "./firebase"; // Adjust path as needed
 import AccountSettings from "./pages/AccountSettings";
 import Dashboard from "./pages/Dashboard";
 import Courses from "./pages/Courses";
@@ -15,11 +17,10 @@ function Redirect({ to }) {
   useEffect(() => {
     navigateTo(to);
   }, [to]);
-
   return null;
 }
 
-function resolveRoute(pathname) {
+function resolveRoute(pathname, onLogout) {
   if (pathname === "/accountsettings") {
     return <AccountSettings />;
   }
@@ -53,14 +54,24 @@ function resolveRoute(pathname) {
   }
 
   if (pathname === "/dashboard") {
-    return <Dashboard />;
+    return <Dashboard onLogout={onLogout} />;
   }
 
-  return <Dashboard />;
+  return <Dashboard onLogout={onLogout} />;
 }
 
-export default function App() {
+export default function AppRouter() {
   const [pathname, setPathname] = useState(window.location.pathname);
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      // After logout, the onAuthStateChanged in App.jsx will trigger
+      // and show the landing page
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
 
   useEffect(() => {
     const handlePopState = () => setPathname(window.location.pathname);
@@ -68,7 +79,7 @@ export default function App() {
     return () => window.removeEventListener("popstate", handlePopState);
   }, []);
 
-  const page = useMemo(() => resolveRoute(pathname), [pathname]);
+  const page = useMemo(() => resolveRoute(pathname, handleLogout), [pathname, handleLogout]);
 
   return (
     <div

@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Menu, UserCircle2, Settings, HelpCircle, LogOut } from "lucide-react";
 import TopNav from "../components/TopNav";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase";
 
 const GearLightbulbIcon = () => (
   <svg viewBox="0 0 120 120" width="130" height="130" xmlns="http://www.w3.org/2000/svg">
@@ -315,7 +317,7 @@ function Courses() {
   );
 }
 
-export default function Dashboard() {
+export default function Dashboard({ onLogout }) {
   const [activeNav, setActiveNav] = useState("Home");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
@@ -369,7 +371,7 @@ export default function Dashboard() {
   const menuItems = [
     { label: "Settings", icon: UserCircle2, route: "/accountsettings" },
     { label: "Help", icon: HelpCircle, route: "/help" },
-    { label: "Log out", icon: LogOut },
+    { label: "Log out", icon: LogOut, action: onLogout },
   ];
 
   return (

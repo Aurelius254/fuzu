@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Menu as MenuIcon } from "lucide-react";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase"; // Adjust path to your firebase.js
 
 export default function MenuButton({ items } = {}) {
   const [open, setOpen] = useState(false);
@@ -20,10 +22,15 @@ export default function MenuButton({ items } = {}) {
     };
   }, []);
 
+  const handleLogout = async () => {
+    await signOut(auth);
+    // That's it! App.jsx will detect the change and show landing page
+  };
+
   const menuItems = items ?? [
     { label: "Settings", route: "/accountsettings" },
     { label: "Help", route: "/help" },
-    { label: "Log out" },
+    { label: "Log out", action: handleLogout }, // Changed: added action
   ];
 
   return (
@@ -55,7 +62,12 @@ export default function MenuButton({ items } = {}) {
               key={mi.label}
               type="button"
               {...(mi.route ? { "data-route": mi.route } : {})}
-              onClick={() => setOpen(false)}
+              onClick={() => {
+                if (mi.action) {
+                  mi.action(); // Call logout function
+                }
+                setOpen(false);
+              }}
               style={{ width: "100%", background: "none", border: "none", color: "#f0f0f0", padding: "10px 12px", textAlign: "left", fontWeight: 700, cursor: "pointer", borderRadius: 8 }}
             >
               {mi.label}

@@ -1,4 +1,6 @@
 import MenuButton from "./MenuButton";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase";
 
 const topNavStyle = {
   maxWidth: 768,
