@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Menu as MenuIcon } from "lucide-react";
 import { signOut } from "firebase/auth";
-import { auth } from "../firebase"; // Adjust path to your firebase.js
+import { auth } from "../firebase";
 
 export default function MenuButton({ items } = {}) {
   const [open, setOpen] = useState(false);
@@ -23,14 +23,17 @@ export default function MenuButton({ items } = {}) {
   }, []);
 
   const handleLogout = async () => {
-    await signOut(auth);
-    // That's it! App.jsx will detect the change and show landing page
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
 
   const menuItems = items ?? [
     { label: "Settings", route: "/accountsettings" },
     { label: "Help", route: "/help" },
-    { label: "Log out", action: handleLogout }, // Changed: added action
+    { label: "Log out", action: handleLogout },
   ];
 
   return (
@@ -63,9 +66,7 @@ export default function MenuButton({ items } = {}) {
               type="button"
               {...(mi.route ? { "data-route": mi.route } : {})}
               onClick={() => {
-                if (mi.action) {
-                  mi.action(); // Call logout function
-                }
+                if (mi.action) mi.action();
                 setOpen(false);
               }}
               style={{ width: "100%", background: "none", border: "none", color: "#f0f0f0", padding: "10px 12px", textAlign: "left", fontWeight: 700, cursor: "pointer", borderRadius: 8 }}

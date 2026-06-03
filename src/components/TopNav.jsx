@@ -1,6 +1,4 @@
 import MenuButton from "./MenuButton";
-import { signOut } from "firebase/auth";
-import { auth } from "../firebase";
 
 const topNavStyle = {
   maxWidth: 768,
@@ -19,7 +17,7 @@ export default function TopNav() {
     <div style={{ background: "#111111", borderBottom: "1px solid #2a2a2a" }}>
       <div style={topNavStyle}>
         <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
-          <div style={{ fontSize: 20, fontWeight: 900, letterSpacing: "-0.5px", color: '#fff' }}>Fuzu</div>
+          <div style={{ fontSize: 20, fontWeight: 900, letterSpacing: "-0.5px", color: "#fff" }}>Fuzu</div>
           <div style={{ display: "flex", alignItems: "center", gap: 18, color: "#b6b6b6", fontSize: 13 }}>
             <button
               type="button"
@@ -56,7 +54,9 @@ export default function TopNav() {
             >
               <span style={{ fontSize: 12 }}>▢</span>
               <span>Courses</span>
-              {isCourses && <div style={{ position: "absolute", left: 0, right: 0, bottom: -15, height: 2, background: "#fff" }} />}
+              {isCourses && (
+                <div style={{ position: "absolute", left: 0, right: 0, bottom: -15, height: 2, background: "#fff" }} />
+              )}
             </button>
           </div>
         </div>
