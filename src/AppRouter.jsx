@@ -5,6 +5,7 @@ import Courses from "./pages/Courses";
 import Subjects from "./pages/Subjects";
 import PathDetail from "./pages/PathDetail";
 import Help from "./pages/Help";
+import ArithmeticLesson from "./pages/ArithmeticLesson";
 
 function navigateTo(pathname) {
   window.history.pushState({}, "", pathname);
@@ -12,9 +13,7 @@ function navigateTo(pathname) {
 }
 
 function Redirect({ to }) {
-  useEffect(() => {
-    navigateTo(to);
-  }, [to]);
+  useEffect(() => { navigateTo(to); }, [to]);
   return null;
 }
 
@@ -27,6 +26,7 @@ function resolveRoute(pathname) {
     return <Redirect to={`/courses/${cardId}`} />;
   }
   if (pathname === "/courses") return <Courses />;
+  if (pathname === "/courses/arithmetic-thinking") return <ArithmeticLesson />;
   if (pathname.startsWith("/courses/")) {
     const cardId = pathname.split("/").filter(Boolean)[1];
     return <PathDetail params={{ cardId }} />;
