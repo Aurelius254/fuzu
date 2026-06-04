@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { ChevronDown, ChevronUp, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import learningRows from "../data/learningRows.jsx";
 import TopNav from "../components/TopNav";
 
@@ -93,45 +93,10 @@ function LearningSection({ row }) {
   );
 }
 
-function ProgressPanel({ open }) {
-  if (!open) return null;
 
-  return (
-    <div
-      style={{
-        marginTop: 14,
-        border: "1px solid #2d2d2d",
-        borderRadius: 16,
-        background: "#141414",
-        padding: 18,
-        color: "#d7d7d7",
-      }}
-    >
-      <div style={{ fontSize: 16, fontWeight: 800, color: "#fff", marginBottom: 10 }}>The progress will be seen here</div>
-      <div style={{ display: "grid", gap: 12 }}>
-        {[
-          { label: "Arithmetic Thinking", value: 42 },
-          { label: "Solving Equations", value: 18 },
-          { label: "Trigonometry", value: 5 },
-        ].map((item) => (
-          <div key={item.label}>
-            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6, fontSize: 13, color: "#bcbcbc" }}>
-              <span>{item.label}</span>
-              <span>{item.value}%</span>
-            </div>
-            <div style={{ height: 8, borderRadius: 999, background: "#242424", overflow: "hidden" }}>
-              <div style={{ width: `${item.value}%`, height: "100%", background: "linear-gradient(90deg, #f6d86a 0%, #c84bff 100%)" }} />
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 export default function Courses() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [showProgress, setShowProgress] = useState(false);
 
   const filteredRows = useMemo(() => {
     const normalizedSearch = searchTerm.trim().toLowerCase();
@@ -186,49 +151,16 @@ export default function Courses() {
           </div>
         </div>
 
-        <div style={{ marginTop: 22 }}>
-          <button
-            type="button"
-            onClick={() => setShowProgress((value) => !value)}
-            style={{
-              width: "100%",
-              textAlign: "left",
-              background: "linear-gradient(135deg, rgba(124,58,237,0.22) 0%, rgba(246,216,106,0.22) 100%)",
-              border: "1px solid rgba(246,216,106,0.28)",
-              borderRadius: 16,
-              padding: "16px 18px",
-              color: "#fff",
-              fontSize: 18,
-              fontWeight: 800,
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: 16,
-            }}
-          >
-            <span>Courses currently learning</span>
-            <span style={{ display: "inline-flex", alignItems: "center", color: "#f6d86a" }}>
-              {showProgress ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-            </span>
-          </button>
-          <ProgressPanel open={showProgress} />
-        </div>
+        <div style={{ height: 28 }} />
 
-        {!showProgress ? (
-          <>
-            <div style={{ height: 28 }} />
-
-            {filteredRows.length > 0 ? filteredRows.map((row, index) => (
-              <div key={row.title}>
-                {index > 0 ? <div style={{ height: 1, background: "#262626", margin: "26px 0 28px" }} /> : null}
-                <LearningSection row={row} />
-              </div>
-            )) : (
-              <div style={{ color: "#9a9a9a", fontSize: 14, padding: "24px 0" }}>No matching courses found.</div>
-            )}
-          </>
-        ) : null}
+        {filteredRows.length > 0 ? filteredRows.map((row, index) => (
+          <div key={row.title}>
+            {index > 0 ? <div style={{ height: 1, background: "#262626", margin: "26px 0 28px" }} /> : null}
+            <LearningSection row={row} />
+          </div>
+        )) : (
+          <div style={{ color: "#9a9a9a", fontSize: 14, padding: "24px 0" }}>No matching courses found.</div>
+        )}
       </div>
     </div>
   );
