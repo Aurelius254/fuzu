@@ -60,7 +60,7 @@ function StreakPanel({ onClose }) {
       borderRadius: 16,
       padding: "18px 20px",
       zIndex: 100,
-      width: 280,
+      width: 260,
       boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
     }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
@@ -82,7 +82,7 @@ function StreakPanel({ onClose }) {
             <div key={dateStr} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 5 }}>
               <div style={{ color: "#555", fontSize: 9, fontWeight: 700 }}>{DAY_LABELS[dow].slice(0, 1)}</div>
               <div style={{
-                width: 36, height: 36, borderRadius: "50%",
+                width: 34, height: 34, borderRadius: "50%",
                 display: "flex", alignItems: "center", justifyContent: "center",
                 background: isActive ? "linear-gradient(135deg, #f5c518 0%, #c84bff 100%)" : isToday ? "#2a2a2a" : "transparent",
                 border: isToday && !isActive ? "2px solid #444" : "2px solid transparent",
@@ -98,7 +98,7 @@ function StreakPanel({ onClose }) {
       </div>
 
       <div style={{ marginTop: 12, color: "#555", fontSize: 11, textAlign: "center" }}>
-        {streakCount === 0 ? "Log in daily to build your streak!" : streakCount === 5 ? "🔥 5-day streak! Keep it up." : `${5 - streakCount} more day${5 - streakCount !== 1 ? "s" : ""} for a perfect week`}
+        {streakCount === 0 ? "Log in daily to build your streak!" : streakCount === 5 ? "🔥 5-day streak! Keep it up." : `${5 - streakCount} more day${5 - streakCount !== 1 ? "s" : ""} for a perfect streak`}
       </div>
     </div>
   );
@@ -109,6 +109,7 @@ export default function TopNav() {
   const isCourses = pathname.startsWith("/courses");
   const [streakCount, setStreakCount] = useState(0);
   const [showStreakPanel, setShowStreakPanel] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
 
   useEffect(() => {
     const days = getStreakData();
@@ -116,27 +117,35 @@ export default function TopNav() {
     setStreakCount(computeStreak(days, last5));
   }, []);
 
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 640);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <div style={{ background: "#111111", borderBottom: "1px solid #2a2a2a" }}>
       <div style={{ maxWidth: 768, margin: "0 auto", padding: "14px 20px 9px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
-          <div style={{ fontSize: 20, fontWeight: 900, letterSpacing: "-0.5px", color: "#fff" }}>Fuzu</div>
-          <div style={{ display: "flex", alignItems: "center", gap: 18, color: "#b6b6b6", fontSize: 13 }}>
+
+        {/* Left — logo + nav links */}
+        <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 12 : 24 }}>
+          <div style={{ fontSize: isMobile ? 17 : 20, fontWeight: 900, letterSpacing: "-0.5px", color: "#fff" }}>Fuzu</div>
+          <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 10 : 18, color: "#b6b6b6", fontSize: 13 }}>
             <button
               type="button"
               data-route="/dashboard"
-              style={{ background: "none", border: "none", color: pathname === "/dashboard" ? "#fff" : "#b6b6b6", padding: 0, display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}
+              style={{ background: "none", border: "none", color: pathname === "/dashboard" ? "#fff" : "#b6b6b6", padding: 0, display: "flex", alignItems: "center", gap: 4, cursor: "pointer", fontSize: isMobile ? 12 : 13 }}
             >
-              <span style={{ fontSize: 13 }}>⌂</span>
+              <span>⌂</span>
               <span>Home</span>
             </button>
 
             <button
               type="button"
               data-route="/courses"
-              style={{ background: "none", border: "none", color: isCourses ? "#fff" : "#b6b6b6", padding: 0, display: "flex", alignItems: "center", gap: 6, position: "relative", cursor: "pointer" }}
+              style={{ background: "none", border: "none", color: isCourses ? "#fff" : "#b6b6b6", padding: 0, display: "flex", alignItems: "center", gap: 4, position: "relative", cursor: "pointer", fontSize: isMobile ? 12 : 13 }}
             >
-              <span style={{ fontSize: 12 }}>▢</span>
+              <span style={{ fontSize: 11 }}>▢</span>
               <span>Courses</span>
               {isCourses && (
                 <div style={{ position: "absolute", left: 0, right: 0, bottom: -15, height: 2, background: "#fff" }} />
@@ -145,25 +154,33 @@ export default function TopNav() {
           </div>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 10, color: "#d8d8d8" }}>
-          <button
-            type="button"
-            style={{ background: "linear-gradient(90deg, rgba(138,115,255,0.25), rgba(255,159,90,0.25))", border: "1px solid #4d4d4d", color: "#fff", borderRadius: 999, padding: "7px 14px", fontSize: 12, fontWeight: 700, cursor: "pointer" }}
-          >
-            Start trial
-          </button>
+        {/* Right — actions */}
+        <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 6 : 10, color: "#d8d8d8" }}>
 
-          <div style={{ display: "flex", alignItems: "center", gap: 6, background: "#191919", border: "1px solid #333", borderRadius: 999, padding: "5px 10px", fontSize: 12 }}>
-            <span>0</span>
-            <span style={{ opacity: 0.7 }}>🔑</span>
-          </div>
+          {/* Hide "Start trial" on mobile */}
+          {!isMobile && (
+            <button
+              type="button"
+              style={{ background: "linear-gradient(90deg, rgba(138,115,255,0.25), rgba(255,159,90,0.25))", border: "1px solid #4d4d4d", color: "#fff", borderRadius: 999, padding: "7px 14px", fontSize: 12, fontWeight: 700, cursor: "pointer" }}
+            >
+              Start trial
+            </button>
+          )}
 
-          {/* Streak icon — clickable, live count, opens panel on mobile */}
+          {/* Hide keys on mobile */}
+          {!isMobile && (
+            <div style={{ display: "flex", alignItems: "center", gap: 6, background: "#191919", border: "1px solid #333", borderRadius: 999, padding: "5px 10px", fontSize: 12 }}>
+              <span>0</span>
+              <span style={{ opacity: 0.7 }}>🔑</span>
+            </div>
+          )}
+
+          {/* Streak — always visible, clickable */}
           <div style={{ position: "relative" }}>
             <button
               type="button"
               onClick={() => setShowStreakPanel((v) => !v)}
-              style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 700, background: "none", border: "none", cursor: "pointer", color: "#d8d8d8", padding: 0 }}
+              style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 12, fontWeight: 700, background: "none", border: "none", cursor: "pointer", color: "#d8d8d8", padding: 0 }}
             >
               <span>{streakCount}</span>
               <span style={{ color: "#f4e05d" }}>⚡</span>

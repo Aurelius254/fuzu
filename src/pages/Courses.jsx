@@ -79,7 +79,7 @@ function LearningSection({ row }) {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: `repeat(${row.cards.length}, minmax(0, 1fr))`,
+          gridTemplateColumns: `repeat(auto-fill, minmax(140px, 1fr))`,
           gap: 12,
           width: "100%",
           paddingBottom: 4,
@@ -120,13 +120,13 @@ export default function Courses() {
       <TopNav />
 
       <div style={{ maxWidth: 768, margin: "0 auto", padding: "32px 18px 40px" }}>
-        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 14 }}>
+        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start", justifyContent: "space-between", gap: 14 }}>
           <div>
             <div style={{ fontSize: 22, fontWeight: 800, marginBottom: 4 }}>Courses</div>
             <div style={{ color: "#8f8f8f", fontSize: 13.5 }}>All of your learning paths now live here</div>
           </div>
 
-          <div style={{ width: 270, marginTop: 8 }}>
+          <div style={{ width: "100%", maxWidth: 270, marginTop: 4 }}>
             <label style={{ display: "block", position: "relative" }}>
               <Search size={14} style={{ position: "absolute", left: 12, top: 15, color: "#888" }} />
               <input
@@ -144,6 +144,7 @@ export default function Courses() {
                   color: "#f1f1f1",
                   fontSize: 12.5,
                   outline: "none",
+                  boxSizing: "border-box",
                 }}
               />
               <div style={{ position: "absolute", right: 10, top: 8, background: "#1d1d1d", border: "1px solid #343434", borderRadius: 999, padding: "4px 10px", fontSize: 11, color: "#757575", fontWeight: 700 }}>Ask</div>
