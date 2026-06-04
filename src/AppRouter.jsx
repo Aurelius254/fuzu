@@ -2,8 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import AccountSettings from "./pages/AccountSettings";
 import Dashboard from "./pages/Dashboard";
 import Courses from "./pages/Courses";
-import Subjects from "./pages/Subjects";
-import PathDetail from "./pages/PathDetail";
 import Help from "./pages/Help";
 import ArithmeticLesson from "./pages/ArithmeticLesson";
 
@@ -19,18 +17,11 @@ function Redirect({ to }) {
 
 function resolveRoute(pathname) {
   if (pathname === "/accountsettings") return <AccountSettings />;
-  if (pathname === "/subjects") return <Subjects />;
+  // Removed /subjects route
   if (pathname === "/paths") return <Redirect to="/courses" />;
-  if (pathname.startsWith("/paths/")) {
-    const cardId = pathname.split("/").filter(Boolean)[1];
-    return <Redirect to={`/courses/${cardId}`} />;
-  }
   if (pathname === "/courses") return <Courses />;
   if (pathname === "/courses/arithmetic-thinking") return <ArithmeticLesson />;
-  if (pathname.startsWith("/courses/")) {
-    const cardId = pathname.split("/").filter(Boolean)[1];
-    return <PathDetail params={{ cardId }} />;
-  }
+  // Removed /courses/:cardId route
   if (pathname === "/help") return <Help />;
   return <Dashboard />;
 }

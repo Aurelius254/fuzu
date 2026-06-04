@@ -52,15 +52,26 @@ function StreakPanel({ onClose }) {
 
   return (
     <div ref={panelRef} style={{
-      position: "absolute",
-      top: "calc(100% + 8px)",
-      right: 0,
+      ...(window.innerWidth < 640 ? {
+        position: "fixed",
+        bottom: 0,
+        left: 0,
+        right: 0,
+        top: "auto",
+        width: "100%",
+        borderRadius: "16px 16px 0 0",
+        borderBottom: "none",
+      } : {
+        position: "absolute",
+        top: "calc(100% + 8px)",
+        right: 0,
+        width: 260,
+        borderRadius: 16,
+      }),
       background: "#1a1a1a",
       border: "1px solid #2a2a2a",
-      borderRadius: 16,
       padding: "18px 20px",
       zIndex: 100,
-      width: 260,
       boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
     }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
