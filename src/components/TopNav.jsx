@@ -83,14 +83,14 @@ function StreakPanel({ onClose }) {
         </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 6 }}>
+      <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", gap: 6 }}>
         {last5.map((dateStr) => {
           const isActive = activeDays.includes(dateStr);
           const isToday = dateStr === today;
           const dow = new Date(dateStr + "T00:00:00").getDay();
           const dayNum = parseInt(dateStr.slice(8), 10);
           return (
-            <div key={dateStr} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 5 }}>
+            <div key={dateStr} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 5, flex: 1 }}>
               <div style={{ color: "#555", fontSize: 9, fontWeight: 700 }}>{DAY_LABELS[dow].slice(0, 1)}</div>
               <div style={{
                 width: 34, height: 34, borderRadius: "50%",
