@@ -4,24 +4,18 @@ import Dashboard from "./pages/Dashboard";
 import Courses from "./pages/Courses";
 import Help from "./pages/Help";
 import ArithmeticLesson from "./pages/ArithmeticLesson";
+import CountingSequences from "./pages/CountingSequences";
 
 function navigateTo(pathname) {
   window.history.pushState({}, "", pathname);
   window.dispatchEvent(new PopStateEvent("popstate"));
 }
 
-function Redirect({ to }) {
-  useEffect(() => { navigateTo(to); }, [to]);
-  return null;
-}
-
 function resolveRoute(pathname) {
   if (pathname === "/accountsettings") return <AccountSettings />;
-  // Removed /subjects route
-  if (pathname === "/paths") return <Redirect to="/courses" />;
   if (pathname === "/courses") return <Courses />;
   if (pathname === "/courses/arithmetic-thinking") return <ArithmeticLesson />;
-  // Removed /courses/:cardId route
+  if (pathname === "/courses/counting-sequences") return <CountingSequences />;
   if (pathname === "/help") return <Help />;
   return <Dashboard />;
 }

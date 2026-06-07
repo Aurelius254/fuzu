@@ -47,12 +47,7 @@ function WeeklyStreakCalendar() {
   }
 
   return (
-    <div style={{
-      background: "#1a1a1a",
-      border: "1px solid #2a2a2a",
-      borderRadius: 16,
-      padding: "18px 20px",
-    }}>
+    <div style={{ background: "#1a1a1a", border: "1px solid #2a2a2a", borderRadius: 16, padding: "18px 20px" }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
         <div style={{ color: "#fff", fontWeight: 800, fontSize: 15 }}>Your streak</div>
         <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
@@ -61,7 +56,6 @@ function WeeklyStreakCalendar() {
           <span style={{ color: "#666", fontSize: 12 }}>days</span>
         </div>
       </div>
-
       <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", gap: 6 }}>
         {last5.map((dateStr) => {
           const isActive = activeDays.includes(dateStr);
@@ -86,7 +80,6 @@ function WeeklyStreakCalendar() {
           );
         })}
       </div>
-
       <div style={{ marginTop: 14, color: "#555", fontSize: 12, textAlign: "center" }}>
         {streakCount === 0 ? "Start your streak — log in every day!" : streakCount === 5 ? "🔥 Perfect 5 days! Keep it going." : `${5 - streakCount} more day${5 - streakCount !== 1 ? "s" : ""} for a perfect streak`}
       </div>
@@ -94,7 +87,33 @@ function WeeklyStreakCalendar() {
   );
 }
 
-function ArithmeticCard() {
+// ── Course cards data ──────────────────────────────────────────────────────────
+const COURSES = [
+  {
+    route: "/courses/arithmetic-thinking",
+    icon: "🔢",
+    iconBg: "linear-gradient(135deg, #f5c518, #f59e0b)",
+    tag: "NEW",
+    category: "MATH FOUNDATIONS",
+    title: "Arithmetic Thinking",
+    description: "Build confidence with number patterns, operations, and mental math.",
+    progress: 0,
+    glow: "rgba(245,197,24,0.12)",
+  },
+  {
+    route: "/courses/counting-sequences",
+    icon: "🔢",
+    iconBg: "linear-gradient(135deg, #7dd3fc, #2563eb)",
+    tag: "NEW",
+    category: "MATH FOUNDATIONS",
+    title: "Counting and Sequences",
+    description: "Discover patterns in number sequences and learn rules for counting systematically.",
+    progress: 0,
+    glow: "rgba(125,211,252,0.12)",
+  },
+];
+
+function CourseCard({ course }) {
   return (
     <div style={{
       background: "linear-gradient(160deg, #1e1e2e 60%, #2a1a3e 100%)",
@@ -107,18 +126,20 @@ function ArithmeticCard() {
       position: "relative",
       overflow: "hidden",
       minHeight: 380,
+      width: "100%",
+      boxSizing: "border-box",
     }}>
-      <div style={{ position: "absolute", top: -40, left: "50%", transform: "translateX(-50%)", width: 200, height: 200, borderRadius: "50%", background: "radial-gradient(circle, rgba(245,197,24,0.12) 0%, transparent 70%)", pointerEvents: "none" }} />
+      <div style={{ position: "absolute", top: -40, left: "50%", transform: "translateX(-50%)", width: 200, height: 200, borderRadius: "50%", background: `radial-gradient(circle, ${course.glow} 0%, transparent 70%)`, pointerEvents: "none" }} />
 
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <div style={{ width: 48, height: 48, borderRadius: 12, background: "linear-gradient(135deg, #f5c518, #f59e0b)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24 }}>🔢</div>
-        <div style={{ background: "#10b981", color: "#fff", fontSize: 10, fontWeight: 800, padding: "3px 8px", borderRadius: 999, letterSpacing: 1 }}>NEW</div>
+        <div style={{ width: 48, height: 48, borderRadius: 12, background: course.iconBg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24 }}>{course.icon}</div>
+        <div style={{ background: "#10b981", color: "#fff", fontSize: 10, fontWeight: 800, padding: "3px 8px", borderRadius: 999, letterSpacing: 1 }}>{course.tag}</div>
       </div>
 
       <div>
-        <div style={{ color: "#7dd3fc", fontSize: 11, fontWeight: 800, letterSpacing: 1, marginBottom: 4 }}>MATH FOUNDATIONS</div>
-        <div style={{ color: "#fff", fontWeight: 900, fontSize: 20, marginBottom: 6 }}>Arithmetic Thinking</div>
-        <div style={{ color: "#9ca3af", fontSize: 13, lineHeight: 1.6 }}>Build confidence with number patterns, operations, and mental math.</div>
+        <div style={{ color: "#7dd3fc", fontSize: 11, fontWeight: 800, letterSpacing: 1, marginBottom: 4 }}>{course.category}</div>
+        <div style={{ color: "#fff", fontWeight: 900, fontSize: 20, marginBottom: 6 }}>{course.title}</div>
+        <div style={{ color: "#9ca3af", fontSize: 13, lineHeight: 1.6 }}>{course.description}</div>
       </div>
 
       <div style={{ flex: 1 }} />
@@ -126,16 +147,16 @@ function ArithmeticCard() {
       <div>
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
           <span style={{ color: "#666", fontSize: 12 }}>Progress</span>
-          <span style={{ color: "#7dd3fc", fontSize: 12, fontWeight: 700 }}>0%</span>
+          <span style={{ color: "#7dd3fc", fontSize: 12, fontWeight: 700 }}>{course.progress}%</span>
         </div>
         <div style={{ background: "#2a2a2a", borderRadius: 999, height: 4 }}>
-          <div style={{ width: "0%", height: 4, borderRadius: 999, background: "linear-gradient(90deg, #f5c518, #c84bff)" }} />
+          <div style={{ width: `${course.progress}%`, height: 4, borderRadius: 999, background: "linear-gradient(90deg, #f5c518, #c84bff)" }} />
         </div>
       </div>
 
       <button
         type="button"
-        data-route="/courses/arithmetic-thinking"
+        data-route={course.route}
         style={{ background: "linear-gradient(90deg, #f5c518 0%, #c84bff 100%)", border: "none", borderRadius: 50, color: "#111", fontWeight: 800, fontSize: 15, padding: "13px 0", width: "100%", cursor: "pointer", letterSpacing: 0.2, boxShadow: "0 4px 24px rgba(162,89,255,0.25)", marginTop: 4 }}
       >
         Start Learning
@@ -144,6 +165,72 @@ function ArithmeticCard() {
   );
 }
 
+// ── Carousel ───────────────────────────────────────────────────────────────────
+function CourseCarousel() {
+  const [active, setActive] = useState(0);
+
+  const prev = () => setActive(i => (i - 1 + COURSES.length) % COURSES.length);
+  const next = () => setActive(i => (i + 1) % COURSES.length);
+
+  return (
+    <div>
+      {/* card */}
+      <div style={{ position: "relative" }}>
+        <CourseCard course={COURSES[active]} />
+
+        {/* arrow buttons */}
+        <button
+          type="button"
+          onClick={prev}
+          style={{
+            position: "absolute", left: -16, top: "50%", transform: "translateY(-50%)",
+            width: 32, height: 32, borderRadius: "50%",
+            background: "#1e293b", border: "1px solid #334155",
+            color: "#fff", fontSize: 16, cursor: "pointer",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            zIndex: 2, boxShadow: "0 2px 8px rgba(0,0,0,0.4)",
+          }}
+        >‹</button>
+
+        <button
+          type="button"
+          onClick={next}
+          style={{
+            position: "absolute", right: -16, top: "50%", transform: "translateY(-50%)",
+            width: 32, height: 32, borderRadius: "50%",
+            background: "#1e293b", border: "1px solid #334155",
+            color: "#fff", fontSize: 16, cursor: "pointer",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            zIndex: 2, boxShadow: "0 2px 8px rgba(0,0,0,0.4)",
+          }}
+        >›</button>
+      </div>
+
+      {/* dots */}
+      <div style={{ display: "flex", justifyContent: "center", gap: 8, marginTop: 16 }}>
+        {COURSES.map((_, i) => (
+          <button
+            key={i}
+            type="button"
+            onClick={() => setActive(i)}
+            style={{
+              width: i === active ? 20 : 8,
+              height: 8,
+              borderRadius: 999,
+              background: i === active ? "linear-gradient(90deg, #f5c518, #c84bff)" : "#2a2a2a",
+              border: "none",
+              cursor: "pointer",
+              padding: 0,
+              transition: "all 0.2s",
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── Dashboard ──────────────────────────────────────────────────────────────────
 export default function Dashboard() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
 
@@ -164,12 +251,12 @@ export default function Dashboard() {
         </div>
 
         {isMobile ? (
-          // Mobile — card only, full width
-          <ArithmeticCard />
+          // Mobile — carousel full width only
+          <CourseCarousel />
         ) : (
-          // Desktop — side by side
+          // Desktop — carousel left, streak right
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18, alignItems: "start" }}>
-            <ArithmeticCard />
+            <CourseCarousel />
             <WeeklyStreakCalendar />
           </div>
         )}
