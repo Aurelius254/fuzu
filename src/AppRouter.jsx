@@ -4,7 +4,7 @@ import Dashboard from "./pages/Dashboard";
 import Courses from "./pages/Courses";
 import Help from "./pages/Help";
 import ArithmeticLesson from "./pages/ArithmeticLesson";
-import CountingSequences from "./pages/CountingSequences";
+import CountingSequences from "./pages/Countingsequences";
 
 function navigateTo(pathname) {
   window.history.pushState({}, "", pathname);
