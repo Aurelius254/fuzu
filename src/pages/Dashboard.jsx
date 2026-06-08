@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import TopNav from "../components/TopNav";
+import { auth } from "../firebase";
 
 function getStreakData() {
   try {
@@ -12,6 +13,15 @@ function getCompleted() {
   try {
     return JSON.parse(localStorage.getItem("fuzu_completed") || "[]");
   } catch { return []; }
+}
+
+function getFirstName() {
+  const user = auth.currentUser;
+  if (!user) return "back";
+  if (user.displayName) return user.displayName.split(" ")[0];
+  // email/password fallback — capitalise first letter of email prefix
+  const prefix = user.email.split("@")[0];
+  return prefix.charAt(0).toUpperCase() + prefix.slice(1);
 }
 
 function recordTodayLogin() {
@@ -259,7 +269,7 @@ export default function Dashboard() {
       <div style={{ maxWidth: 768, margin: "0 auto", padding: "32px 20px" }}>
 
         <div style={{ marginBottom: 28 }}>
-          <div style={{ color: "#fff", fontWeight: 900, fontSize: 26, marginBottom: 4 }}>Welcome back 👋</div>
+          <div style={{ color: "#fff", fontWeight: 900, fontSize: 26, marginBottom: 4 }}>Welcome back, {getFirstName()} 👋</div>
           <div style={{ color: "#666", fontSize: 14 }}>Pick up where you left off.</div>
         </div>
 
