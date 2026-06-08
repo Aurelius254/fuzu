@@ -247,7 +247,7 @@ function LandingPage({ onShowAuth }) {
               Interactive learning platform
             </p>
             <h1 className="text-5xl md:text-7xl font-bold leading-tight mb-8">
-              Learn clearly.
+              Learn by doing.
               <br />
               Think broadly.
               <br />

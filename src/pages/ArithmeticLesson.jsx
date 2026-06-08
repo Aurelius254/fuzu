@@ -4,6 +4,7 @@ import TopNav from "../components/TopNav";
 const LESSONS = [
   {
     id: 1,
+    type: "lesson",
     title: "What does half mean?",
     explanation: "Finding half of something means splitting it into two equal parts. Each part is exactly the same size. Half of 8 is 4 because 4 + 4 = 8.",
     visual: "split",
@@ -15,6 +16,7 @@ const LESSONS = [
   },
   {
     id: 2,
+    type: "lesson",
     title: "Half on a number line",
     explanation: "On a number line, half sits exactly in the middle between 0 and the number. Half of 10 is 5 — it's right in the center between 0 and 10.",
     visual: "numberline",
@@ -26,6 +28,7 @@ const LESSONS = [
   },
   {
     id: 3,
+    type: "lesson",
     title: "Half of even numbers",
     explanation: "Every even number has a clean half — no fractions needed. Half of 12 is 6. Half of 20 is 10. The pattern: divide by 2.",
     visual: "dots",
@@ -37,6 +40,7 @@ const LESSONS = [
   },
   {
     id: 4,
+    type: "lesson",
     title: "Half in your head",
     explanation: "Mental trick: to halve a large even number, halve the tens and units separately. Half of 46 → half of 40 is 20, half of 6 is 3, so half of 46 is 23.",
     visual: "split",
@@ -48,6 +52,7 @@ const LESSONS = [
   },
   {
     id: 5,
+    type: "lesson",
     title: "Put it all together",
     explanation: "You've learned that half means equal splitting, that it lives in the middle of a number line, and that you can split numbers mentally. Now try this final one.",
     visual: "dots",
@@ -57,21 +62,44 @@ const LESSONS = [
     answer: 9,
     hint: "Half of 10 is 5, half of 8 is 4 — what's 5 + 4?",
   },
+  // ── Quiz questions (no hints, no explanations, no visuals) ──
+  {
+    id: 6,
+    type: "quiz",
+    question: "What is half of 94?",
+    options: [44, 46, 47, 48],
+    answer: 47,
+  },
+  {
+    id: 7,
+    type: "quiz",
+    question: "What is half of 150?",
+    options: [70, 72, 75, 80],
+    answer: 75,
+  },
+  {
+    id: 8,
+    type: "quiz",
+    question: "Which number is exactly halfway between 60 and 80?",
+    options: [65, 68, 70, 72],
+    answer: 70,
+  },
 ];
 
+// ── Visuals ────────────────────────────────────────────────────────────────────
 function SplitVisual({ number, revealed }) {
   const half = number / 2;
   return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, padding: "20px 0" }}>
-      <div style={{ background: "linear-gradient(135deg, #1e3a5f, #2563eb)", border: "1px solid #3b82f6", borderRadius: 14, padding: "18px 28px", textAlign: "center", minWidth: 80 }}>
+      <div style={{ background: "linear-gradient(135deg,#1e3a5f,#2563eb)", border: "1px solid #3b82f6", borderRadius: 14, padding: "18px 28px", textAlign: "center", minWidth: 80 }}>
         <div style={{ color: "#93c5fd", fontSize: 11, fontWeight: 700, marginBottom: 4 }}>Group A</div>
         <div style={{ color: "#fff", fontWeight: 900, fontSize: 36 }}>{revealed ? half : "?"}</div>
       </div>
       <div style={{ textAlign: "center" }}>
-        <div style={{ color: "#666", fontSize: 28, fontWeight: 300 }}>+</div>
+        <div style={{ color: "#666", fontSize: 28 }}>+</div>
         <div style={{ color: "#7dd3fc", fontSize: 12, fontWeight: 700, marginTop: 4 }}>{number} total</div>
       </div>
-      <div style={{ background: "linear-gradient(135deg, #1e3a5f, #2563eb)", border: "1px solid #3b82f6", borderRadius: 14, padding: "18px 28px", textAlign: "center", minWidth: 80 }}>
+      <div style={{ background: "linear-gradient(135deg,#1e3a5f,#2563eb)", border: "1px solid #3b82f6", borderRadius: 14, padding: "18px 28px", textAlign: "center", minWidth: 80 }}>
         <div style={{ color: "#93c5fd", fontSize: 11, fontWeight: 700, marginBottom: 4 }}>Group B</div>
         <div style={{ color: "#fff", fontWeight: 900, fontSize: 36 }}>{revealed ? half : "?"}</div>
       </div>
@@ -91,10 +119,8 @@ function NumberLineVisual({ number, revealed }) {
           const isHalf = i === 1;
           return (
             <div key={val} style={{ position: "absolute", left: `calc(${pct}% - ${i === 0 ? 10 : i === 2 ? 30 : 20}px)`, top: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
-              <div style={{ width: isHalf ? 14 : 10, height: isHalf ? 14 : 10, borderRadius: "50%", background: isHalf ? "linear-gradient(135deg, #f5c518, #c84bff)" : "#444", border: isHalf ? "2px solid #f5c518" : "none", marginTop: isHalf ? 21 : 23, boxShadow: isHalf ? "0 0 12px rgba(245,197,24,0.5)" : "none" }} />
-              <div style={{ color: isHalf ? "#f5c518" : "#666", fontSize: isHalf ? 15 : 12, fontWeight: isHalf ? 900 : 600, marginTop: 2 }}>
-                {isHalf ? (revealed ? half : "?") : val}
-              </div>
+              <div style={{ width: isHalf ? 14 : 10, height: isHalf ? 14 : 10, borderRadius: "50%", background: isHalf ? "linear-gradient(135deg,#f5c518,#c84bff)" : "#444", border: isHalf ? "2px solid #f5c518" : "none", marginTop: isHalf ? 21 : 23, boxShadow: isHalf ? "0 0 12px rgba(245,197,24,0.5)" : "none" }} />
+              <div style={{ color: isHalf ? "#f5c518" : "#666", fontSize: isHalf ? 15 : 12, fontWeight: isHalf ? 900 : 600, marginTop: 2 }}>{isHalf ? (revealed ? half : "?") : val}</div>
             </div>
           );
         })}
@@ -114,7 +140,7 @@ function DotsVisual({ number, revealed }) {
           <div key={group} style={{ textAlign: "center" }}>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 6, justifyContent: "center", maxWidth: 120, marginBottom: 10 }}>
               {dots.slice(group * half, group * half + half).map((i) => (
-                <div key={i} style={{ width: 18, height: 18, borderRadius: "50%", background: group === 0 ? "linear-gradient(135deg, #f5c518, #f59e0b)" : "linear-gradient(135deg, #c84bff, #7c3aed)" }} />
+                <div key={i} style={{ width: 18, height: 18, borderRadius: "50%", background: group === 0 ? "linear-gradient(135deg,#f5c518,#f59e0b)" : "linear-gradient(135deg,#c84bff,#7c3aed)" }} />
               ))}
             </div>
             <div style={{ color: "#666", fontSize: 12 }}>Group {group + 1}</div>
@@ -126,44 +152,60 @@ function DotsVisual({ number, revealed }) {
   );
 }
 
-// LessonStep now calls onNext/onFinish with the correctness directly
-function LessonStep({ lesson, stepIndex, total, onNext, onFinish }) {
+// ── Step ───────────────────────────────────────────────────────────────────────
+function Step({ lesson, stepIndex, total, onNext, onFinish }) {
   const [selected, setSelected] = useState(null);
   const [showHint, setShowHint] = useState(false);
+  const isQuiz = lesson.type === "quiz";
   const isCorrect = selected === lesson.answer;
   const isLast = stepIndex === total - 1;
 
-  const handleSelect = (val) => {
-    if (selected !== null) return;
-    setSelected(val);
-  };
+  // count only lesson steps for progress label
+  const lessonCount = LESSONS.filter(l => l.type === "lesson").length;
+  const quizCount = LESSONS.filter(l => l.type === "quiz").length;
+  const quizIndex = isQuiz ? stepIndex - lessonCount : null;
 
   return (
     <div style={{ maxWidth: 580, margin: "0 auto" }}>
+      {/* progress bar */}
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 28 }}>
         {Array.from({ length: total }).map((_, i) => (
-          <div key={i} style={{ flex: 1, height: 4, borderRadius: 999, background: i < stepIndex ? "linear-gradient(90deg, #f5c518, #c84bff)" : i === stepIndex ? "#3b82f6" : "#2a2a2a" }} />
+          <div key={i} style={{ flex: 1, height: 4, borderRadius: 999, background: i < stepIndex ? "linear-gradient(90deg,#f5c518,#c84bff)" : i === stepIndex ? (isQuiz ? "#f59e0b" : "#3b82f6") : "#2a2a2a" }} />
         ))}
         <span style={{ color: "#666", fontSize: 12, whiteSpace: "nowrap" }}>{stepIndex + 1} / {total}</span>
       </div>
 
-      <div style={{ background: "#1a1a1a", border: "1px solid #2a2a2a", borderRadius: 20, overflow: "hidden" }}>
+      <div style={{ background: "#1a1a1a", border: `1px solid ${isQuiz ? "#f59e0b33" : "#2a2a2a"}`, borderRadius: 20, overflow: "hidden" }}>
         <div style={{ padding: "24px 28px 0" }}>
-          <div style={{ color: "#7dd3fc", fontSize: 11, fontWeight: 800, letterSpacing: 1, marginBottom: 6 }}>STEP {stepIndex + 1}</div>
-          <div style={{ color: "#fff", fontWeight: 900, fontSize: 22, marginBottom: 14 }}>{lesson.title}</div>
-          <div style={{ background: "#111", border: "1px solid #222", borderRadius: 12, padding: "14px 18px", color: "#ccc", fontSize: 14, lineHeight: 1.7 }}>
-            {lesson.explanation}
+          {/* label */}
+          {isQuiz ? (
+            <div style={{ background: "#f59e0b22", border: "1px solid #f59e0b55", borderRadius: 8, padding: "5px 12px", marginBottom: 12, display: "inline-block" }}>
+              <span style={{ color: "#f59e0b", fontSize: 11, fontWeight: 800, letterSpacing: 1 }}>QUIZ · QUESTION {quizIndex + 1} OF {quizCount}</span>
+            </div>
+          ) : (
+            <div style={{ color: "#7dd3fc", fontSize: 11, fontWeight: 800, letterSpacing: 1, marginBottom: 6 }}>STEP {stepIndex + 1}</div>
+          )}
+
+          {!isQuiz && <div style={{ color: "#fff", fontWeight: 900, fontSize: 22, marginBottom: 14 }}>{lesson.title}</div>}
+
+          {!isQuiz && (
+            <div style={{ background: "#111", border: "1px solid #222", borderRadius: 12, padding: "14px 18px", color: "#ccc", fontSize: 14, lineHeight: 1.7 }}>
+              {lesson.explanation}
+            </div>
+          )}
+        </div>
+
+        {/* visual — only for lesson steps */}
+        {!isQuiz && (
+          <div style={{ padding: "0 28px" }}>
+            {lesson.visual === "split" && <SplitVisual number={lesson.visualNumber} revealed={selected !== null} />}
+            {lesson.visual === "numberline" && <NumberLineVisual number={lesson.visualNumber} revealed={selected !== null} />}
+            {lesson.visual === "dots" && <DotsVisual number={lesson.visualNumber} revealed={selected !== null} />}
           </div>
-        </div>
+        )}
 
-        <div style={{ padding: "0 28px" }}>
-          {lesson.visual === "split" && <SplitVisual number={lesson.visualNumber} revealed={selected !== null} />}
-          {lesson.visual === "numberline" && <NumberLineVisual number={lesson.visualNumber} revealed={selected !== null} />}
-          {lesson.visual === "dots" && <DotsVisual number={lesson.visualNumber} revealed={selected !== null} />}
-        </div>
-
-        <div style={{ padding: "0 28px 28px" }}>
-          <div style={{ color: "#fff", fontWeight: 800, fontSize: 17, marginBottom: 14 }}>{lesson.question}</div>
+        <div style={{ padding: isQuiz ? "24px 28px 28px" : "0 28px 28px" }}>
+          <div style={{ color: "#fff", fontWeight: 800, fontSize: isQuiz ? 18 : 17, marginBottom: 14, lineHeight: 1.4 }}>{lesson.question}</div>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 16 }}>
             {lesson.options.map((opt) => {
@@ -175,7 +217,8 @@ function LessonStep({ lesson, stepIndex, total, onNext, onFinish }) {
                 else if (isPicked) { bg = "#1c0a0a"; border = "1px solid #dc2626"; color = "#f87171"; }
               }
               return (
-                <button key={opt} type="button" onClick={() => handleSelect(opt)} style={{ background: bg, border, borderRadius: 12, padding: "14px 0", color, fontWeight: 800, fontSize: 20, cursor: selected !== null ? "default" : "pointer", transition: "all 0.15s" }}>
+                <button key={opt} type="button" onClick={() => { if (selected === null) setSelected(opt); }}
+                  style={{ background: bg, border, borderRadius: 12, padding: "14px 0", color, fontWeight: 800, fontSize: 20, cursor: selected !== null ? "default" : "pointer", transition: "all 0.15s" }}>
                   {opt}
                 </button>
               );
@@ -184,42 +227,49 @@ function LessonStep({ lesson, stepIndex, total, onNext, onFinish }) {
 
           {selected !== null && (
             <div style={{ background: isCorrect ? "#052e16" : "#1c0a0a", border: `1px solid ${isCorrect ? "#16a34a" : "#dc2626"}`, borderRadius: 12, padding: "12px 16px", color: isCorrect ? "#4ade80" : "#f87171", fontSize: 14, fontWeight: 700, marginBottom: 14 }}>
-              {isCorrect ? "✓ Correct! Well done." : `✗ Not quite — the answer is ${lesson.answer}.`}
+              {isCorrect ? "✓ Correct!" : `✗ The answer is ${lesson.answer}.`}
             </div>
           )}
 
-          {selected === null && (
-            <button type="button" onClick={() => setShowHint((v) => !v)} style={{ background: "none", border: "none", color: "#666", fontSize: 13, cursor: "pointer", marginBottom: showHint ? 8 : 0 }}>
+          {/* hint only for lesson steps */}
+          {!isQuiz && selected === null && (
+            <button type="button" onClick={() => setShowHint(v => !v)} style={{ background: "none", border: "none", color: "#666", fontSize: 13, cursor: "pointer", marginBottom: showHint ? 8 : 0 }}>
               {showHint ? "Hide hint ▲" : "Need a hint? ▼"}
             </button>
           )}
-          {showHint && selected === null && (
+          {!isQuiz && showHint && selected === null && (
             <div style={{ color: "#f5c518", fontSize: 13, marginBottom: 12 }}>💡 {lesson.hint}</div>
           )}
 
-          {/* Pass correctness directly from local state — this is the fix */}
           {selected !== null && (
-            <button
-              type="button"
-              onClick={() => isLast ? onFinish(selected === lesson.answer) : onNext(selected === lesson.answer)}
-              style={{ width: "100%", background: "linear-gradient(90deg, #f5c518 0%, #c84bff 100%)", border: "none", borderRadius: 50, color: "#111", fontWeight: 800, fontSize: 15, padding: "13px 0", cursor: "pointer" }}
-            >
-              {isLast ? "Finish Lesson 🎉" : "Next →"}
+            <button type="button" onClick={() => isLast ? onFinish(selected === lesson.answer) : onNext(selected === lesson.answer)}
+              style={{ width: "100%", background: "linear-gradient(90deg,#f5c518 0%,#c84bff 100%)", border: "none", borderRadius: 50, color: "#111", fontWeight: 800, fontSize: 15, padding: "13px 0", cursor: "pointer" }}>
+              {isLast ? "Finish 🎉" : isQuiz && stepIndex === lessonCount ? "Start Quiz →" : "Next →"}
             </button>
           )}
         </div>
       </div>
+
+      {/* quiz transition banner — shows on last lesson step */}
+      {!isQuiz && stepIndex === lessonCount - 1 && selected !== null && (
+        <div style={{ marginTop: 12, background: "#f59e0b11", border: "1px solid #f59e0b33", borderRadius: 12, padding: "10px 16px", color: "#f59e0b", fontSize: 13, textAlign: "center" }}>
+          🧠 Lesson complete — quiz coming up next!
+        </div>
+      )}
     </div>
   );
 }
 
 function CompletionScreen({ score, total }) {
-  const pct = Math.round((score / total) * 100);
+  const lessonCount = LESSONS.filter(l => l.type === "lesson").length;
+  const quizCount = LESSONS.filter(l => l.type === "quiz").length;
+  const quizScore = score; // we only count quiz answers
+  const pct = Math.round((quizScore / quizCount) * 100);
   return (
     <div style={{ maxWidth: 480, margin: "0 auto", textAlign: "center", padding: "40px 20px" }}>
-      <div style={{ fontSize: 64, marginBottom: 16 }}>🎉</div>
-      <div style={{ color: "#fff", fontWeight: 900, fontSize: 28, marginBottom: 8 }}>Lesson Complete!</div>
-      <div style={{ color: "#9ca3af", fontSize: 15, marginBottom: 28 }}>You scored {score} out of {total} — {pct}%</div>
+      <div style={{ fontSize: 64, marginBottom: 16 }}>{pct === 100 ? "🏆" : pct >= 60 ? "🎉" : "📚"}</div>
+      <div style={{ color: "#fff", fontWeight: 900, fontSize: 28, marginBottom: 8 }}>All done!</div>
+      <div style={{ color: "#9ca3af", fontSize: 15, marginBottom: 28 }}>Quiz score: {quizScore} / {quizCount} — {pct}%</div>
       <div style={{ background: "#1a1a1a", border: "1px solid #2a2a2a", borderRadius: 16, padding: "20px 28px", marginBottom: 28 }}>
         <div style={{ color: "#7dd3fc", fontSize: 13, marginBottom: 6 }}>What you learned</div>
         <div style={{ color: "#ccc", fontSize: 14, lineHeight: 1.7, textAlign: "left" }}>
@@ -229,7 +279,8 @@ function CompletionScreen({ score, total }) {
           • You can halve large numbers mentally by splitting them
         </div>
       </div>
-      <button type="button" data-route="/dashboard" style={{ background: "linear-gradient(90deg, #f5c518 0%, #c84bff 100%)", border: "none", borderRadius: 50, color: "#111", fontWeight: 800, fontSize: 15, padding: "13px 40px", cursor: "pointer" }}>
+      <button type="button" data-route="/dashboard"
+        style={{ background: "linear-gradient(90deg,#f5c518 0%,#c84bff 100%)", border: "none", borderRadius: 50, color: "#111", fontWeight: 800, fontSize: 15, padding: "13px 40px", cursor: "pointer" }}>
         Back to Dashboard
       </button>
     </div>
@@ -238,17 +289,23 @@ function CompletionScreen({ score, total }) {
 
 export default function ArithmeticLesson() {
   const [step, setStep] = useState(0);
-  const [score, setScore] = useState(0);
+  const [quizScore, setQuizScore] = useState(0);
   const [done, setDone] = useState(false);
 
-  // wasCorrect comes directly from LessonStep — no stale state issue
   const handleNext = (wasCorrect) => {
-    if (wasCorrect) setScore((s) => s + 1);
-    setStep((s) => s + 1);
+    if (LESSONS[step].type === "quiz" && wasCorrect) setQuizScore(s => s + 1);
+    setStep(s => s + 1);
   };
 
   const handleFinish = (wasCorrect) => {
-    if (wasCorrect) setScore((s) => s + 1);
+    if (LESSONS[step].type === "quiz" && wasCorrect) setQuizScore(s => s + 1);
+    try {
+      const completed = JSON.parse(localStorage.getItem("fuzu_completed") || "[]");
+      if (!completed.includes("arithmetic-thinking")) {
+        completed.push("arithmetic-thinking");
+        localStorage.setItem("fuzu_completed", JSON.stringify(completed));
+      }
+    } catch (e) {}
     setDone(true);
   };
 
@@ -265,16 +322,9 @@ export default function ArithmeticLesson() {
         </div>
 
         {done ? (
-          <CompletionScreen score={score} total={LESSONS.length} />
+          <CompletionScreen score={quizScore} total={LESSONS.length} />
         ) : (
-          <LessonStep
-            key={step}
-            lesson={LESSONS[step]}
-            stepIndex={step}
-            total={LESSONS.length}
-            onNext={handleNext}
-            onFinish={handleFinish}
-          />
+          <Step key={step} lesson={LESSONS[step]} stepIndex={step} total={LESSONS.length} onNext={handleNext} onFinish={handleFinish} />
         )}
       </div>
     </div>

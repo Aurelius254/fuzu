@@ -8,6 +8,12 @@ function getStreakData() {
   } catch { return []; }
 }
 
+function getCompleted() {
+  try {
+    return JSON.parse(localStorage.getItem("fuzu_completed") || "[]");
+  } catch { return []; }
+}
+
 function recordTodayLogin() {
   const today = new Date().toISOString().slice(0, 10);
   const days = getStreakData();
@@ -88,8 +94,9 @@ function WeeklyStreakCalendar() {
 }
 
 // ── Course cards data ──────────────────────────────────────────────────────────
-const COURSES = [
+const COURSE_DATA = [
   {
+    id: "arithmetic-thinking",
     route: "/courses/arithmetic-thinking",
     icon: "🔢",
     iconBg: "linear-gradient(135deg, #f5c518, #f59e0b)",
@@ -97,10 +104,10 @@ const COURSES = [
     category: "MATH FOUNDATIONS",
     title: "Arithmetic Thinking",
     description: "Build confidence with number patterns, operations, and mental math.",
-    progress: 0,
     glow: "rgba(245,197,24,0.12)",
   },
   {
+    id: "counting-sequences",
     route: "/courses/counting-sequences",
     icon: "🔢",
     iconBg: "linear-gradient(135deg, #7dd3fc, #2563eb)",
@@ -108,7 +115,6 @@ const COURSES = [
     category: "MATH FOUNDATIONS",
     title: "Counting and Sequences",
     description: "Discover patterns in number sequences and learn rules for counting systematically.",
-    progress: 0,
     glow: "rgba(125,211,252,0.12)",
   },
 ];
@@ -157,9 +163,9 @@ function CourseCard({ course }) {
       <button
         type="button"
         data-route={course.route}
-        style={{ background: "linear-gradient(90deg, #f5c518 0%, #c84bff 100%)", border: "none", borderRadius: 50, color: "#111", fontWeight: 800, fontSize: 15, padding: "13px 0", width: "100%", cursor: "pointer", letterSpacing: 0.2, boxShadow: "0 4px 24px rgba(162,89,255,0.25)", marginTop: 4 }}
+        style={{ background: course.progress === 100 ? "#1e293b" : "linear-gradient(90deg, #f5c518 0%, #c84bff 100%)", border: course.progress === 100 ? "1px solid #334155" : "none", borderRadius: 50, color: course.progress === 100 ? "#fff" : "#111", fontWeight: 800, fontSize: 15, padding: "13px 0", width: "100%", cursor: "pointer", letterSpacing: 0.2, boxShadow: course.progress === 100 ? "none" : "0 4px 24px rgba(162,89,255,0.25)", marginTop: 4 }}
       >
-        Start Learning
+        {course.progress === 100 ? "Review ✓" : "Start Learning"}
       </button>
     </div>
   );
@@ -168,6 +174,13 @@ function CourseCard({ course }) {
 // ── Carousel ───────────────────────────────────────────────────────────────────
 function CourseCarousel() {
   const [active, setActive] = useState(0);
+  const [completed, setCompleted] = useState([]);
+
+  useEffect(() => {
+    setCompleted(getCompleted());
+  }, []);
+
+  const COURSES = COURSE_DATA.map(c => ({ ...c, progress: completed.includes(c.id) ? 100 : 0 }));
 
   const prev = () => setActive(i => (i - 1 + COURSES.length) % COURSES.length);
   const next = () => setActive(i => (i + 1) % COURSES.length);
