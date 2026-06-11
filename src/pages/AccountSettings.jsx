@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import TopNav from "../components/TopNav";
+import { auth } from "../firebase";
 
 const css = `
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap');
@@ -39,6 +40,7 @@ const css = `
   .brill-news-label { font-size: 15px; font-weight: 600; color: #f3f3f3; line-height: 1.4; text-align: left; }
   .brill-switch { width: 56px; height: 30px; border-radius: 999px; padding: 3px; display: flex; align-items: center; flex-shrink: 0; }
   .brill-switch-knob { width: 24px; height: 24px; border-radius: 50%; background: #fff; box-shadow: 0 3px 8px rgba(0,0,0,0.18); }
+  .brill-success { font-size: 13px; color: #4ade80; margin-top: 6px; }
 
   @media (max-width: 640px) {
     .brill-page { flex-direction: column; padding: 16px 14px; gap: 16px; }
@@ -59,15 +61,33 @@ const InfoIcon = () => (
 
 export default function AccountSettings() {
   const [activeTab, setActiveTab] = useState("Account");
-  const [firstName, setFirstName] = useState("Aurelius");
-  const [lastName, setLastName] = useState("Macharia");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [isGoogleUser, setIsGoogleUser] = useState(false);
+  const [saveMsg, setSaveMsg] = useState("");
   const [announcementPrefs, setAnnouncementPrefs] = useState({ newsletters: true, launches: true, promotions: true });
   const [appearanceMode, setAppearanceMode] = useState("Auto");
   const [emailPrefs, setEmailPrefs] = useState({ reminders: true, alerts: true });
   const [learningReminders, setLearningReminders] = useState({ dailyPractice: true, personalized: true });
 
+  // Pull name and email from Firebase auth on mount
   useEffect(() => {
-    try { const saved = localStorage.getItem("appearanceMode"); if (saved) setAppearanceMode(saved); } catch (e) {}
+    const user = auth.currentUser;
+    if (user) {
+      const displayName = user.displayName || "";
+      const parts = displayName.split(" ");
+      setFirstName(parts[0] || "");
+      setLastName(parts.slice(1).join(" ") || "");
+      setEmail(user.email || "");
+      // Check if signed in via Google
+      const isGoogle = user.providerData?.some(p => p.providerId === "google.com");
+      setIsGoogleUser(!!isGoogle);
+    }
+    try {
+      const saved = localStorage.getItem("appearanceMode");
+      if (saved) setAppearanceMode(saved);
+    } catch (e) {}
   }, []);
 
   useEffect(() => {
@@ -83,14 +103,25 @@ export default function AccountSettings() {
     try { localStorage.setItem("appearanceMode", appearanceMode); } catch (e) {}
   }, [appearanceMode]);
 
+  const handleUpdateName = async () => {
+    try {
+      const { updateProfile } = await import("firebase/auth");
+      await updateProfile(auth.currentUser, {
+        displayName: `${firstName} ${lastName}`.trim(),
+      });
+      setSaveMsg("Personal info updated ✓");
+      setTimeout(() => setSaveMsg(""), 3000);
+    } catch (e) {
+      setSaveMsg("Update failed — try again.");
+      setTimeout(() => setSaveMsg(""), 3000);
+    }
+  };
+
   const sidebarItems = ["Account", "Premium", "Preferences"];
 
   const ToggleRow = ({ label, value, onToggle }) => (
-    <button
-      type="button"
-      onClick={onToggle}
-      style={{ width: "100%", background: "#171717", border: "1.5px solid #383838", borderRadius: 14, padding: "16px 18px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, cursor: "pointer" }}
-    >
+    <button type="button" onClick={onToggle}
+      style={{ width: "100%", background: "#171717", border: "1.5px solid #383838", borderRadius: 14, padding: "16px 18px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, cursor: "pointer" }}>
       <div className="brill-news-label">{label}</div>
       <div className="brill-switch" style={{ justifyContent: value ? "flex-end" : "flex-start", background: value ? "#4a72ff" : "#3a3a3a" }}>
         <div className="brill-switch-knob" />
@@ -168,7 +199,10 @@ export default function AccountSettings() {
               <label className="brill-label">Last name</label>
               <input className="brill-input" type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} />
             </div>
-            <button className="brill-btn-update" type="button">Update personal info</button>
+            <button className="brill-btn-update" type="button" onClick={handleUpdateName}>
+              Update personal info
+            </button>
+            {saveMsg && <div className="brill-success">{saveMsg}</div>}
           </div>
         </div>
 
@@ -178,13 +212,20 @@ export default function AccountSettings() {
           <div className="brill-section-title">Email address</div>
           <div className="brill-section">
             <div className="brill-email-row">
-              <span className="brill-email-text">machariaaurelius@gmail.com</span>
+              <span className="brill-email-text">{email || "No email on file"}</span>
               <div className="brill-badges">
                 <span className="brill-badge brill-badge-verified">VERIFIED</span>
                 <span className="brill-badge brill-badge-primary">PRIMARY</span>
               </div>
             </div>
-            <button className="brill-btn-add-email" type="button">Add another email</button>
+            {!isGoogleUser && (
+              <button className="brill-btn-add-email" type="button">Add another email</button>
+            )}
+            {isGoogleUser && (
+              <div style={{ fontSize: 13, color: "#666", textAlign: "center", padding: "8px 0" }}>
+                Email is managed by your Google account
+              </div>
+            )}
           </div>
         </div>
 
@@ -194,7 +235,11 @@ export default function AccountSettings() {
           <div className="brill-section-title">Password</div>
           <div className="brill-info-box">
             <span className="brill-info-icon"><InfoIcon /></span>
-            <div>Your account doesn't have a password set. You sign in using social authentication.</div>
+            <div>
+              {isGoogleUser
+                ? "Your account uses Google sign-in. Password management is handled by your Google account."
+                : "You can set or update your password from your account security settings."}
+            </div>
           </div>
         </div>
       </>
