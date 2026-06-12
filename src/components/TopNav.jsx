@@ -140,7 +140,7 @@ export default function TopNav() {
 
         {/* Left — logo + nav links */}
         <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 12 : 24 }}>
-          <div style={{ fontSize: isMobile ? 17 : 20, fontWeight: 900, letterSpacing: "-0.5px", color: "#fff" }}>Fuzu</div>
+          <div style={{ fontSize: isMobile ? 17 : 20, fontWeight: 900, letterSpacing: "-0.5px", color: "#FDDA0D" }}>SHADEL</div>
           <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 10 : 18, color: "#b6b6b6", fontSize: 13 }}>
             <button
               type="button"
