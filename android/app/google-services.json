@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1049455311991",
+    "project_id": "fuzu-73a0e",
+    "storage_bucket": "fuzu-73a0e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1049455311991:android:d773cedffa2c1f30f25a72",
+        "android_client_info": {
+          "package_name": "com.shadel.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1049455311991-n300v5n6idck94au56vp0thh6au9e708.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.shadel.app",
+            "certificate_hash": "31f1ddc02a74ac4ee9b7976b920266bce5788f01"
+          }
+        },
+        {
+          "client_id": "1049455311991-l729030417ifpb27iohliq0794lskoqb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYNXTv42ozmWvDVzuNUW3TstxuQQVxSkM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1049455311991-l729030417ifpb27iohliq0794lskoqb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
