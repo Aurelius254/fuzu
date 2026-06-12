@@ -4,7 +4,7 @@ android {
     namespace = "shadelridgeways.vercel.app"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "shadelridgeways.vercel.app"
+        applicationId "com.shadel.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
