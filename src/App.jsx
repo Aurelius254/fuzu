@@ -475,7 +475,20 @@ export default function App() {
   }, []);
 
   // Wait for Firebase to check auth state before rendering anything
-  if (!authChecked) return null;
+  if (!authChecked) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          height: "100vh",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        Loading...
+      </div>
+    );
+  }
 
   // Signed in — show her dashboard
   if (user) return <AppRouter />;
