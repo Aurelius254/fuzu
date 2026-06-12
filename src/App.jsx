@@ -477,15 +477,8 @@ export default function App() {
   // Wait for Firebase to check auth state before rendering anything
   if (!authChecked) {
     return (
-      <div
-        style={{
-          display: "flex",
-          height: "100vh",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        Loading...
+      <div style={{ color: "white", padding: 20 }}>
+        Auth loading...
       </div>
     );
   }
