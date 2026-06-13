@@ -1,5 +1,8 @@
 {
   "appId": "com.shadel.app",
   "appName": "Shadel",
-  "webDir": "dist"
+  "webDir": "dist",
+  "android": {
+    "webContentsDebuggingEnabled": true
+  }
 }
