@@ -1,6 +1,5 @@
-// Initialize Firebase
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider } from "firebase/auth";
+import { indexedDBLocalPersistence, initializeAuth, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -11,7 +10,11 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-console.log(import.meta.env.VITE_FIREBASE_API_KEY);
 const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
+
+// Initialize Auth with IndexedDB persistence for reliability in Capacitor
+export const auth = initializeAuth(app, {
+  persistence: indexedDBLocalPersistence,
+});
+
 export const googleProvider = new GoogleAuthProvider();

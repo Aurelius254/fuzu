@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "1049455311991-n300v5n6idck94au56vp0thh6au9e708.apps.googleusercontent.com",
+          "client_id": "1049455311991-af8gmu1on5l8hldu81hbugjs2nbe2t8l.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.shadel.app",
-            "certificate_hash": "31f1ddc02a74ac4ee9b7976b920266bce5788f01"
+            "certificate_hash": "221ef624850d24d7649458e2c0562d5505a8a2cb"
           }
         },
         {

@@ -134,9 +134,18 @@ export default function TopNav() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const [isApp, setIsApp] = useState(false);
+
+  useEffect(() => {
+    setIsApp(!!window.Capacitor);
+  }, []); 
+
   return (
-    <div style={{ background: "#111111", borderBottom: "1px solid #2a2a2a" }}>
-      <div style={{ maxWidth: 768, margin: "0 auto", padding: "14px 20px 9px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+    <div style={{ 
+      background: "#111111", 
+      borderBottom: "1px solid #2a2a2a",
+      paddingTop: isApp ? "35px" : "0px"
+    }}>      <div style={{ maxWidth: 768, margin: "0 auto", padding: "14px 20px 9px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
 
         {/* Left — logo + nav links */}
         <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 12 : 24 }}>
