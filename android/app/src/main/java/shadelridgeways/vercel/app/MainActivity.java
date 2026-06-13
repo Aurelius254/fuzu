@@ -1,4 +1,4 @@
-package shadelridgeways.vercel.app;
+package com.shadel.app;
 
 import com.getcapacitor.BridgeActivity;
 

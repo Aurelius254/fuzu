@@ -28,12 +28,28 @@ function AuthModal({ onClose, onAuthSuccess }) {
     setError("");
     setLoading(true);
     try {
-      await signInWithPopup(auth, googleProvider);
-      onAuthSuccess();
+        // Detect if running in Capacitor (Android/iOS app)
+        const isCapacitor = !!window.Capacitor;
+        
+        if (isCapacitor) {
+            // Use Capacitor's browser for OAuth instead of WebView
+            const { Browser } = await import('@capacitor/browser');
+            const { OAuthProvider } = await import('firebase/auth');
+            
+            // Use OAuthProvider with redirect URI
+            const provider = new OAuthProvider('google.com');
+            const result = await signInWithPopup(auth, provider);
+            onAuthSuccess();
+        } else {
+            // Website - normal popup
+            await signInWithPopup(auth, googleProvider);
+            onAuthSuccess();
+        }
     } catch (err) {
-      setError("Google sign in failed. Please try again.");
+        console.error("Google sign in error:", err);
+        setError("Google sign in failed: " + err.message);
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
   };
 
@@ -226,7 +242,7 @@ function LandingPage({ onShowAuth }) {
       <nav className="fixed top-0 left-0 w-full z-50 bg-[#0f1720]/90 backdrop-blur-md border-b border-white/10">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="text-2xl font-bold tracking-tight text-[#FDDA0D]">SHADEL</div>
-          <div className="hidden md:flex items-center gap-6 text-sm text-gray-300">
+          <div className="flex items-center gap-6 text-sm text-gray-300">
             <a href="#" className="hover:text-white transition">About</a>
             <button
               onClick={onShowAuth}
