@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import MenuButton from "./MenuButton";
+import { Browser } from '@capacitor/browser';
+
 
 const DAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -140,6 +142,25 @@ export default function TopNav() {
     setIsApp(!!window.Capacitor);
   }, []); 
 
+  const openLego = async () => {
+    if (Capacitor.isNativePlatform()) {
+      // In app - use Browser plugin (opens in-app)
+      try {
+        await Browser.open({ 
+          url: 'https://spike.ahardy.za.net/',
+          presentationStyle: 'fullscreen',
+        });
+      } catch (error) {
+        console.error('Failed to open Lego site:', error);
+        // Fallback: navigate in same window
+        window.location.href = 'https://spike.ahardy.za.net/';
+      }
+    } else {
+      // Web browser - navigate in same page (replaces current page)
+      window.location.href = 'https://spike.ahardy.za.net/';
+    }
+  };
+
   return (
     <div style={{ 
       background: "#111111", 
@@ -171,10 +192,8 @@ export default function TopNav() {
           </button>
 
           {/* NEW: Lego link - opens in new tab */}
-          <a
-            href="https://spike.ahardy.za.net/"
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            onClick={openLego}
             style={{ 
               background: "none", 
               border: "none", 
@@ -185,12 +204,11 @@ export default function TopNav() {
               gap: 4, 
               cursor: "pointer", 
               fontSize: isMobile ? 12 : 13,
-              textDecoration: "none"
             }}
           >
             <span style={{ fontSize: 13 }}>🧱</span>
             <span>Lego</span>
-          </a>
+          </button>
         </div>
 
         {/* Right — actions */}
