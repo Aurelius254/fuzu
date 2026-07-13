@@ -148,30 +148,49 @@ export default function TopNav() {
     }}>      <div style={{ maxWidth: 768, margin: "0 auto", padding: "14px 20px 9px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
 
         {/* Left — logo + nav links */}
-        <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 12 : 24 }}>
-          <div style={{ fontSize: isMobile ? 17 : 20, fontWeight: 900, letterSpacing: "-0.5px", color: "#FDDA0D" }}>SHADEL</div>
-          <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 10 : 18, color: "#b6b6b6", fontSize: 13 }}>
-            <button
-              type="button"
-              data-route="/dashboard"
-              style={{ background: "none", border: "none", color: pathname === "/dashboard" ? "#fff" : "#b6b6b6", padding: 0, display: "flex", alignItems: "center", gap: 4, cursor: "pointer", fontSize: isMobile ? 12 : 13 }}
-            >
-              <span>⌂</span>
-              <span>Home</span>
-            </button>
+        <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 10 : 18, color: "#b6b6b6", fontSize: 13 }}>
+          <button
+            type="button"
+            data-route="/dashboard"
+            style={{ background: "none", border: "none", color: pathname === "/dashboard" ? "#fff" : "#b6b6b6", padding: 0, display: "flex", alignItems: "center", gap: 4, cursor: "pointer", fontSize: isMobile ? 12 : 13 }}
+          >
+            <span>⌂</span>
+            <span>Home</span>
+          </button>
 
-            <button
-              type="button"
-              data-route="/courses"
-              style={{ background: "none", border: "none", color: isCourses ? "#fff" : "#b6b6b6", padding: 0, display: "flex", alignItems: "center", gap: 4, position: "relative", cursor: "pointer", fontSize: isMobile ? 12 : 13 }}
-            >
-              <span style={{ fontSize: 11 }}>▢</span>
-              <span>Courses</span>
-              {isCourses && (
-                <div style={{ position: "absolute", left: 0, right: 0, bottom: -15, height: 2, background: "#fff" }} />
-              )}
-            </button>
-          </div>
+          <button
+            type="button"
+            data-route="/courses"
+            style={{ background: "none", border: "none", color: isCourses ? "#fff" : "#b6b6b6", padding: 0, display: "flex", alignItems: "center", gap: 4, position: "relative", cursor: "pointer", fontSize: isMobile ? 12 : 13 }}
+          >
+            <span style={{ fontSize: 11 }}>▢</span>
+            <span>Courses</span>
+            {isCourses && (
+              <div style={{ position: "absolute", left: 0, right: 0, bottom: -15, height: 2, background: "#fff" }} />
+            )}
+          </button>
+
+          {/* NEW: Lego link - opens in new tab */}
+          <a
+            href="https://spike.ahardy.za.net/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ 
+              background: "none", 
+              border: "none", 
+              color: "#b6b6b6", 
+              padding: 0, 
+              display: "flex", 
+              alignItems: "center", 
+              gap: 4, 
+              cursor: "pointer", 
+              fontSize: isMobile ? 12 : 13,
+              textDecoration: "none"
+            }}
+          >
+            <span style={{ fontSize: 13 }}>🧱</span>
+            <span>Lego</span>
+          </a>
         </div>
 
         {/* Right — actions */}
