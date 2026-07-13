@@ -1,5 +1,12 @@
 import { initializeApp } from "firebase/app";
-import { indexedDBLocalPersistence, initializeAuth, GoogleAuthProvider } from "firebase/auth";
+import { 
+  indexedDBLocalPersistence, 
+  browserLocalPersistence,
+  initializeAuth, 
+  GoogleAuthProvider,
+  getAuth
+} from "firebase/auth";
+import { Capacitor } from '@capacitor/core';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -12,9 +19,17 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-// Initialize Auth with IndexedDB persistence for reliability in Capacitor
-export const auth = initializeAuth(app, {
-  persistence: indexedDBLocalPersistence,
-});
+// Use different persistence based on platform
+let auth;
+if (Capacitor.isNativePlatform()) {
+  // Use IndexedDB for Capacitor (native apps)
+  auth = initializeAuth(app, {
+    persistence: indexedDBLocalPersistence,
+  });
+} else {
+  // Use browser default for web
+  auth = getAuth(app);
+}
 
+export { auth };
 export const googleProvider = new GoogleAuthProvider();
