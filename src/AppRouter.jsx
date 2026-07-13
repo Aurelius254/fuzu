@@ -5,6 +5,8 @@ import Courses from "./pages/Courses";
 import Help from "./pages/Help";
 import ArithmeticLesson from "./pages/ArithmeticLesson";
 import CountingSequences from "./pages/Countingsequences";
+import LegoSimulator from "./pages/LegoSimulator";
+
 
 function navigateTo(pathname) {
   window.history.pushState({}, "", pathname);
@@ -16,6 +18,7 @@ function resolveRoute(pathname) {
   if (pathname === "/courses") return <Courses />;
   if (pathname === "/courses/arithmetic-thinking") return <ArithmeticLesson />;
   if (pathname === "/courses/counting-sequences") return <CountingSequences />;
+  if (pathname === "/lego-simulator") return <LegoSimulator />;
   if (pathname === "/help") return <Help />;
   return <Dashboard />;
 }

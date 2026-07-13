@@ -3,6 +3,7 @@ import { Capacitor } from "@capacitor/core";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signInWithPopup,
   signInWithCredential,
   GoogleAuthProvider,
   onAuthStateChanged,

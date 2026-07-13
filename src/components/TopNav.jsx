@@ -142,24 +142,6 @@ export default function TopNav() {
     setIsApp(!!window.Capacitor);
   }, []); 
 
-  const openLego = async () => {
-    if (Capacitor.isNativePlatform()) {
-      // In app - use Browser plugin (opens in-app)
-      try {
-        await Browser.open({ 
-          url: 'https://spike.ahardy.za.net/',
-          presentationStyle: 'fullscreen',
-        });
-      } catch (error) {
-        console.error('Failed to open Lego site:', error);
-        // Fallback: navigate in same window
-        window.location.href = 'https://spike.ahardy.za.net/';
-      }
-    } else {
-      // Web browser - navigate in same page (replaces current page)
-      window.location.href = 'https://spike.ahardy.za.net/';
-    }
-  };
 
   return (
     <div style={{ 
@@ -193,7 +175,8 @@ export default function TopNav() {
 
           {/* NEW: Lego link - opens in new tab */}
           <button
-            onClick={openLego}
+            type="button"
+            data-route="/lego-simulator"
             style={{ 
               background: "none", 
               border: "none", 
@@ -207,7 +190,7 @@ export default function TopNav() {
             }}
           >
             <span style={{ fontSize: 13 }}>🧱</span>
-            <span>Lego</span>
+            <span>STEM</span>
           </button>
         </div>
 
