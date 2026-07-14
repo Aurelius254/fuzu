@@ -131,7 +131,7 @@ function LegoDropdown({ onClose }) {
     }}>
       <button
         type="button"
-        data-route="/lego-simulator"
+        data-route="/ev3-lab"
         onClick={onClose}
         style={{ width: "100%", background: "none", border: "none", color: "#e8e8e8", padding: "10px 14px", textAlign: "left", fontSize: 13, fontWeight: 600, borderRadius: 8, cursor: "pointer" }}
         onMouseEnter={e => e.currentTarget.style.background = "#2a2a2a"}
@@ -141,7 +141,7 @@ function LegoDropdown({ onClose }) {
       </button>
       <button
         type="button"
-        data-route="/spike-simulator"
+        data-route="/spike-lab"
         onClick={onClose}
         style={{ width: "100%", background: "none", border: "none", color: "#e8e8e8", padding: "10px 14px", textAlign: "left", fontSize: 13, fontWeight: 600, borderRadius: 8, cursor: "pointer" }}
         onMouseEnter={e => e.currentTarget.style.background = "#2a2a2a"}

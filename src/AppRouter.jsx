@@ -18,8 +18,8 @@ function resolveRoute(pathname) {
   if (pathname === "/courses") return <Courses />;
   if (pathname === "/courses/arithmetic-thinking") return <ArithmeticLesson />;
   if (pathname === "/courses/counting-sequences") return <CountingSequences />;
-  if (pathname === "/lego-simulator") return <LegoSimulator />;
-  if (pathname === "/spike-simulator") return <SpikeSimulator />;
+  if (pathname === "/ev3-lab") return <LegoSimulator />;
+  if (pathname === "/spike-lab") return <SpikeSimulator />;
   if (pathname === "/help") return <Help />;
   return <Dashboard />;
 }
