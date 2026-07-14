@@ -26,6 +26,7 @@ allprojects {
 
 subprojects {
     if (name == 'capacitor-firebase-authentication') {
+        buildDir = new File(rootProject.buildDir, name)
         afterEvaluate {
             def fixedSrc = file("${buildDir}/fixed-src")
             def fixSymlinksTask = task fixSymlinks(type: Copy) {

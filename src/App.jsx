@@ -124,7 +124,7 @@ function AuthModal({ onClose, onAuthSuccess }) {
         {/* MAIN VIEW */}
         {view === "main" && (
           <>
-            <h2 className="text-2xl font-bold text-center text-white mb-8">Sign in to Shadel</h2>
+            <h2 className="text-2xl font-bold text-center text-white mb-8">Sign in to Virtual TA</h2>
             <div className="space-y-3">
               <button
                 onClick={handleGoogleSignIn}
@@ -271,7 +271,7 @@ function LandingPage({ onShowAuth }) {
       {/* Navbar */}
       <nav className={`fixed top-0 left-0 w-full z-50 bg-[#0f1720]/90 backdrop-blur-md border-b border-white/10 ${isApp ? 'pt-10' : ''}`}>
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="text-2xl font-bold tracking-tight text-[#FDDA0D]">SHADEL</div>
+          <div className="text-2xl font-bold tracking-tight text-[#FDDA0D]">Virtual TA</div>
           <div className="flex items-center gap-6 text-sm text-gray-300">
             <a href="#" className="hover:text-white transition">About</a>
             <button
@@ -299,7 +299,7 @@ function LandingPage({ onShowAuth }) {
               Build confidently.
             </h1>
             <p className="text-lg text-gray-300 leading-relaxed max-w-xl mb-10">
-              Shadel helps learners master math, science, and AI through
+              Virtual TA helps learners master math, science, and AI through
               engaging interactive lessons and visual problem solving.
             </p>
             <button
@@ -348,7 +348,7 @@ function LandingPage({ onShowAuth }) {
               <div>
                 <h3 className="text-3xl md:text-4xl font-bold mb-6">Lessons that actually stick</h3>
                 <p className="text-gray-400 text-lg leading-relaxed">
-                  Shadel doesn't just present information — it walks you through ideas step by step, using visuals and interaction to build real understanding from the ground up.
+                  Virtual TA doesn't just present information — it walks you through ideas step by step, using visuals and interaction to build real understanding from the ground up.
                 </p>
               </div>
               <div className="bg-[#0f1720] border border-white/10 rounded-3xl p-10 flex items-center justify-center min-h-[260px]">
@@ -380,7 +380,7 @@ function LandingPage({ onShowAuth }) {
               <div>
                 <h3 className="text-3xl md:text-4xl font-bold mb-6">Built around <span className="italic text-[#7dd3fc]">your</span> pace</h3>
                 <p className="text-gray-400 text-lg leading-relaxed">
-                  Shadel adapts to where you are. Whether you're revisiting the basics or pushing into advanced territory, the platform meets you exactly where you need to be.
+                  Virtual TA adapts to where you are. Whether you're revisiting the basics or pushing into advanced territory, the platform meets you exactly where you need to be.
                 </p>
               </div>
             </div>
@@ -444,7 +444,7 @@ function LandingPage({ onShowAuth }) {
       {/* CTA */}
       <section className="py-24 px-6 bg-[#111827] border-y border-white/5">
         <div className="max-w-4xl mx-auto text-center bg-gradient-to-br from-[#1e293b] to-[#0f1720] border border-white/10 rounded-[40px] p-12 shadow-2xl">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">Start learning with Shadel today.</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">Start learning with Virtual TA today.</h2>
           <p className="text-gray-300 text-lg mb-10 max-w-2xl mx-auto">
             Interactive lessons designed to help you truly understand concepts, not just memorize them.
           </p>
@@ -462,7 +462,7 @@ function LandingPage({ onShowAuth }) {
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-5 gap-12 mb-16">
             <div className="md:col-span-2">
-              <div className="text-2xl font-bold text-white mb-4">Shadel</div>
+              <div className="text-2xl font-bold text-white mb-4">Virtual TA</div>
               <p className="text-gray-400 text-sm leading-relaxed max-w-xs">
                 An interactive learning platform built to help you master math, science, and AI — deeply and visually.
               </p>
@@ -494,7 +494,7 @@ function LandingPage({ onShowAuth }) {
             </div>
           </div>
           <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-sm text-gray-500">© {new Date().getFullYear()} Shadel. All rights reserved.</p>
+            <p className="text-sm text-gray-500">© {new Date().getFullYear()} Virtual TA. All rights reserved.</p>
             <div className="flex items-center gap-5 text-gray-500">
               <a href="#" className="hover:text-white transition text-sm">Twitter / X</a>
               <a href="#" className="hover:text-white transition text-sm">LinkedIn</a>
