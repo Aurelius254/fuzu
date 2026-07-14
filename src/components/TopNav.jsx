@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import MenuButton from "./MenuButton";
-import { Browser } from '@capacitor/browser';
-
 
 const DAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -54,26 +52,15 @@ function StreakPanel({ onClose }) {
 
   return (
     <div ref={panelRef} style={{
-      ...(window.innerWidth < 640 ? {
-        position: "fixed",
-        bottom: 0,
-        left: 0,
-        right: 0,
-        top: "auto",
-        width: "100%",
-        borderRadius: "16px 16px 0 0",
-        borderBottom: "none",
-      } : {
-        position: "absolute",
-        top: "calc(100% + 8px)",
-        right: 0,
-        width: 260,
-        borderRadius: 16,
-      }),
+      position: "absolute",
+      top: "calc(100% + 8px)",
+      right: 0,
       background: "#1a1a1a",
       border: "1px solid #2a2a2a",
+      borderRadius: 16,
       padding: "18px 20px",
       zIndex: 100,
+      width: 260,
       boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
     }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
@@ -117,11 +104,62 @@ function StreakPanel({ onClose }) {
   );
 }
 
+// Lego dropdown
+function LegoDropdown({ onClose }) {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    function handleClick(e) {
+      if (ref.current && !ref.current.contains(e.target)) onClose();
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [onClose]);
+
+  return (
+    <div ref={ref} style={{
+      position: "absolute",
+      top: "calc(100% + 10px)",
+      left: 0,
+      background: "#1a1a1a",
+      border: "1px solid #2a2a2a",
+      borderRadius: 12,
+      padding: 6,
+      zIndex: 100,
+      minWidth: 120,
+      boxShadow: "0 8px 24px rgba(0,0,0,0.5)",
+    }}>
+      <button
+        type="button"
+        data-route="/lego-simulator"
+        onClick={onClose}
+        style={{ width: "100%", background: "none", border: "none", color: "#e8e8e8", padding: "10px 14px", textAlign: "left", fontSize: 13, fontWeight: 600, borderRadius: 8, cursor: "pointer" }}
+        onMouseEnter={e => e.currentTarget.style.background = "#2a2a2a"}
+        onMouseLeave={e => e.currentTarget.style.background = "none"}
+      >
+        🤖 EV3
+      </button>
+      <button
+        type="button"
+        data-route="/spike-simulator"
+        onClick={onClose}
+        style={{ width: "100%", background: "none", border: "none", color: "#e8e8e8", padding: "10px 14px", textAlign: "left", fontSize: 13, fontWeight: 600, borderRadius: 8, cursor: "pointer" }}
+        onMouseEnter={e => e.currentTarget.style.background = "#2a2a2a"}
+        onMouseLeave={e => e.currentTarget.style.background = "none"}
+      >
+        ⚙️ Spike
+      </button>
+    </div>
+  );
+}
+
 export default function TopNav() {
   const pathname = typeof window !== "undefined" ? window.location.pathname : "/";
   const isCourses = pathname.startsWith("/courses");
+  const isLego = pathname.includes("simulator");
   const [streakCount, setStreakCount] = useState(0);
   const [showStreakPanel, setShowStreakPanel] = useState(false);
+  const [showLegoMenu, setShowLegoMenu] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
 
   useEffect(() => {
@@ -136,94 +174,61 @@ export default function TopNav() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const [isApp, setIsApp] = useState(false);
-
-  useEffect(() => {
-    setIsApp(!!window.Capacitor);
-  }, []); 
-
-
   return (
-    <div style={{ 
-      background: "#111111", 
-      borderBottom: "1px solid #2a2a2a",
-      paddingTop: isApp ? "35px" : "0px"
-    }}>      <div style={{ maxWidth: 768, margin: "0 auto", padding: "14px 20px 9px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+    <div style={{ background: "#111111", borderBottom: "1px solid #2a2a2a" }}>
+      <div style={{ maxWidth: 768, margin: "0 auto", padding: "14px 20px 9px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
 
-        {/* Left — logo + nav links */}
-        <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 10 : 18, color: "#b6b6b6", fontSize: 13 }}>
-          <button
-            type="button"
-            data-route="/dashboard"
-            style={{ background: "none", border: "none", color: pathname === "/dashboard" ? "#fff" : "#b6b6b6", padding: 0, display: "flex", alignItems: "center", gap: 4, cursor: "pointer", fontSize: isMobile ? 12 : 13 }}
-          >
-            <span>⌂</span>
-            <span>Home</span>
-          </button>
+        {/* Left */}
+        <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 12 : 24 }}>
+          <div style={{ fontSize: isMobile ? 17 : 20, fontWeight: 900, letterSpacing: "-0.5px", color: "#fff" }}>Fuzu</div>
+          <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 10 : 18, color: "#b6b6b6", fontSize: 13 }}>
 
-          <button
-            type="button"
-            data-route="/courses"
-            style={{ background: "none", border: "none", color: isCourses ? "#fff" : "#b6b6b6", padding: 0, display: "flex", alignItems: "center", gap: 4, position: "relative", cursor: "pointer", fontSize: isMobile ? 12 : 13 }}
-          >
-            <span style={{ fontSize: 11 }}>▢</span>
-            <span>Courses</span>
-            {isCourses && (
-              <div style={{ position: "absolute", left: 0, right: 0, bottom: -15, height: 2, background: "#fff" }} />
-            )}
-          </button>
+            {/* Home */}
+            <button type="button" data-route="/dashboard"
+              style={{ background: "none", border: "none", color: pathname === "/dashboard" ? "#fff" : "#b6b6b6", padding: 0, display: "flex", alignItems: "center", gap: 4, cursor: "pointer", fontSize: isMobile ? 12 : 13 }}>
+              <span>⌂</span><span>Home</span>
+            </button>
 
-          {/* NEW: Lego link - opens in new tab */}
-          <button
-            type="button"
-            data-route="/lego-simulator"
-            style={{ 
-              background: "none", 
-              border: "none", 
-              color: "#b6b6b6", 
-              padding: 0, 
-              display: "flex", 
-              alignItems: "center", 
-              gap: 4, 
-              cursor: "pointer", 
-              fontSize: isMobile ? 12 : 13,
-            }}
-          >
-            <span style={{ fontSize: 13 }}>🧱</span>
-            <span>STEM</span>
-          </button>
+            {/* Courses */}
+            <button type="button" data-route="/courses"
+              style={{ background: "none", border: "none", color: isCourses ? "#fff" : "#b6b6b6", padding: 0, display: "flex", alignItems: "center", gap: 4, position: "relative", cursor: "pointer", fontSize: isMobile ? 12 : 13 }}>
+              <span style={{ fontSize: 11 }}>▢</span><span>Courses</span>
+              {isCourses && <div style={{ position: "absolute", left: 0, right: 0, bottom: -15, height: 2, background: "#fff" }} />}
+            </button>
+
+            {/* Lego dropdown */}
+            <div style={{ position: "relative" }}>
+              <button type="button"
+                onClick={() => setShowLegoMenu(v => !v)}
+                style={{ background: "none", border: "none", color: isLego ? "#fff" : "#b6b6b6", padding: 0, display: "flex", alignItems: "center", gap: 4, cursor: "pointer", fontSize: isMobile ? 12 : 13, position: "relative" }}>
+                <span>🧱</span><span>Lego</span><span style={{ fontSize: 9, marginLeft: 2 }}>▾</span>
+                {isLego && <div style={{ position: "absolute", left: 0, right: 0, bottom: -15, height: 2, background: "#fff" }} />}
+              </button>
+              {showLegoMenu && <LegoDropdown onClose={() => setShowLegoMenu(false)} />}
+            </div>
+
+          </div>
         </div>
 
-        {/* Right — actions */}
+        {/* Right */}
         <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 6 : 10, color: "#d8d8d8" }}>
-
-          {/* Hide "Start trial" on mobile */}
           {!isMobile && (
-            <button
-              type="button"
-              style={{ background: "linear-gradient(90deg, rgba(138,115,255,0.25), rgba(255,159,90,0.25))", border: "1px solid #4d4d4d", color: "#fff", borderRadius: 999, padding: "7px 14px", fontSize: 12, fontWeight: 700, cursor: "pointer" }}
-            >
+            <button type="button"
+              style={{ background: "linear-gradient(90deg, rgba(138,115,255,0.25), rgba(255,159,90,0.25))", border: "1px solid #4d4d4d", color: "#fff", borderRadius: 999, padding: "7px 14px", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
               Start trial
             </button>
           )}
-
-          {/* Hide keys on mobile */}
           {!isMobile && (
             <div style={{ display: "flex", alignItems: "center", gap: 6, background: "#191919", border: "1px solid #333", borderRadius: 999, padding: "5px 10px", fontSize: 12 }}>
-              <span>0</span>
-              <span style={{ opacity: 0.7 }}>🔑</span>
+              <span>0</span><span style={{ opacity: 0.7 }}>🔑</span>
             </div>
           )}
 
-          {/* Streak — always visible, clickable */}
+          {/* Streak */}
           <div style={{ position: "relative" }}>
-            <button
-              type="button"
-              onClick={() => setShowStreakPanel((v) => !v)}
-              style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 12, fontWeight: 700, background: "none", border: "none", cursor: "pointer", color: "#d8d8d8", padding: 0 }}
-            >
-              <span>{streakCount}</span>
-              <span style={{ color: "#f4e05d" }}>⚡</span>
+            <button type="button" onClick={() => setShowStreakPanel(v => !v)}
+              style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 12, fontWeight: 700, background: "none", border: "none", cursor: "pointer", color: "#d8d8d8", padding: 0 }}>
+              <span>{streakCount}</span><span style={{ color: "#f4e05d" }}>⚡</span>
             </button>
             {showStreakPanel && <StreakPanel onClose={() => setShowStreakPanel(false)} />}
           </div>
